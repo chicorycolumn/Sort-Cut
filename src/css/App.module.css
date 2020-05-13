@@ -1,0 +1,119 @@
+.App {
+  text-align: center;
+  height: 100%;
+}
+
+.grossuberbox {
+  background-color: honeydew;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+
+.uberbox {
+  border: black solid 5pt;
+  width: 450px;
+  min-width: 450px;
+  background-color: aqua;
+  align-self: center;
+  margin-top: 0px;
+}
+
+.bigwordbox {
+  background-color: aquamarine;
+  height: 180px;
+  text-align: center;
+  padding-top: 30px;
+  font-size: 120px;
+}
+
+.buttonbox {
+  background-color: bisque;
+}
+
+.button {
+  height: 50px;
+  width: 50%;
+  font-size: 24px;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+.ybutton {
+  /* background-color: chartreuse; */
+}
+
+.nbutton {
+  /* background-color: red; */
+}
+
+.listContainer {
+  height: 300px;
+  display: flex;
+  flex-direction: row;
+}
+
+.list {
+  height: 100%;
+  width: 50%;
+  text-align: center;
+  font-size: 22px;
+  overflow-y: auto;
+}
+
+.goodlist {
+  background-color: lightgreen;
+}
+
+.badlist {
+  background-color: plum;
+}
+
+.wordinlist {
+  margin: 5px auto 5px auto;
+  /* padding: 0px, 5px, 0px, 5px;
+  width: min-content; */
+}
+
+.badlist .wordinlist:hover {
+  color: chartreuse;
+  cursor: w-resize;
+}
+
+.goodlist .wordinlist:hover {
+  color: #e60000;
+  cursor: e-resize;
+}
+
+.littleButtonsContainer {
+  background-color: cornsilk;
+  display: flex;
+  justify-content: center;
+}
+
+.obscurus {
+  /* display: none; */
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.65;
+  z-index: 1;
+  position: fixed;
+}
+
+.configOptionsHolder {
+  background-color: yellow;
+  height: 250px;
+  width: 250px;
+  z-index: 2;
+  position: fixed;
+  align-self: center;
+  top: 125px;
+}
+
+.clippy {
+  height: 50%;
+}

@@ -1,36 +1,18 @@
 import styles from "./css/App.module.css";
 import React, { Component } from "react";
-import clippy from "./images/clippy.png";
-import { keys } from "./utils.js";
+import { keys, animals } from "./utils.js";
 import words from "./words.txt";
+import ConfigMenu from "./ConfigMenu.jsx";
+import UploadMenu from "./UploadMenu.jsx";
 
 class App extends Component {
   state = {
+    configLang: 0,
     i: 0,
     list: {
       yList: [],
       nList: [],
-      wordlist: [
-        "alligator",
-        "bear",
-        "cat",
-        "dog",
-        "elephant",
-        "fox",
-        "goat",
-        "horse",
-        "iguana",
-        "jackrabbit",
-        "kangfaroo",
-        "lemur",
-        "moray eel",
-        "narhwal",
-        "orangutan",
-        "pangolin",
-        "quietus",
-        "ram",
-        "snake",
-      ],
+      wordlist: [],
       wordlistBackup: [],
     },
     triggers: {
@@ -58,38 +40,16 @@ class App extends Component {
     },
 
     mostRecentAction: { word: null, origin: null, destination: null },
-    showConfigOverlay: false,
-    configText: [
-      [
-        "Bonjour! Je suis Monsieur Clippe, and I will aide vous to configure les boutons. Press any touche to continue.",
-        "Alors, first please press the touche, ah, I mean the key, that you want to mean OUI.",
-        "Très bien! Now please choisir the key to mean NON.",
-        "Et finalment, which touche voulez-vous for the bouton défaire? Ah, pardon! Je vais dire the UNDO button.",
-        "Bien joué, et au revoir!",
-        "Merci!",
-        "D'accord",
-      ],
-      [
-        "Guten tag! Ich bin Herr Klip, and I will help you zu konfigurieren the buttons. Drücken Sie any key to continue.",
-        "Lasst uns beginnen! First please drücken, ah, I mean press - the key that you want to mean JA.",
-        "Fantastisch! Und jetzt please choose the Taste to mean NEIN.",
-        "Und endlich, which Taste do you want as the Rückgängig? Ach, entschuldige! Ich meine the UNDO button.",
-        "Gut gemacht, und auf Wiedersehen!",
-        "Danke!",
-        "Gut",
-      ],
-      [
-        "Hola! Yo soy Señor Clipedro, and I will help you configurar los botones. Press any tecla to continue.",
-        "Pues, to start please press the tecla, ay, quiero decir the key, that you want to mean SÍ.",
-        "Genial! Ahora please elige the key to mean NO.",
-        "Y al fin, which tecla quieres for the botón deshacer? Aj, disculpe! Eso es the UNDO button.",
-        "Bien hecho, y adios!",
-        "Gracias!",
-        "Vale",
-      ],
-    ],
-    configLang: 0,
-    configIterator: 0,
+    showConfigMenu: false,
+    showUploadMenu: true,
+
+    configureKeys: () => {
+      console.log("configureKeys not set yet in App.jsx");
+    },
+  };
+
+  setAppState = (newState) => {
+    this.setState(newState);
   };
 
   componentDidMount() {
@@ -99,10 +59,13 @@ class App extends Component {
         newState.colors.display[key] = currState.colors.reference[key];
       });
 
-      if (currState.list.wordlist.length) {
-        newState.list = currState.list;
-        newState.list.wordlistBackup = currState.list.wordlist.slice(0);
-      }
+      newState.list = currState.list;
+      newState.list.wordlist = animals;
+      newState.list.wordlistBackup = animals;
+      // if (currState.list.wordlist.length) {
+      //   newState.list = currState.list;
+      //   newState.list.wordlistBackup = currState.list.wordlist.slice(0);
+      // }
 
       return newState;
     });
@@ -110,8 +73,8 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    let configureKeys = this.configureKeys;
-    if (this.state.showConfigOverlay) {
+    let configureKeys = this.state.configureKeys;
+    if (this.state.showConfigMenu) {
       document.onkeyup = function (event) {
         event.preventDefault();
         configureKeys(event);
@@ -131,11 +94,11 @@ class App extends Component {
   };
 
   keepListening = () => {
-    let { showConfigOverlay, triggers } = this.state;
+    let { showConfigMenu, triggers } = this.state;
     let pressButtonColor = this.pressButtonColor;
 
     document.onkeyup = function (event) {
-      if (!showConfigOverlay) {
+      if (!showConfigMenu) {
         let which = event.which;
         let code = event.keyCode;
 
@@ -150,69 +113,6 @@ class App extends Component {
         });
       }
     };
-  };
-
-  saveConfigAndExitMenu = () => {
-    let { triggers } = this.state;
-
-    Object.keys(triggers.backup).forEach((t) => {
-      triggers.backup[t] = triggers.current[t];
-    });
-
-    this.setState({
-      triggers,
-      configIterator: 0,
-      showConfigOverlay: false,
-      z: { y: 0, n: 0, u: 0 },
-    });
-
-    setTimeout(this.keepListening, 100);
-  };
-
-  configureKeys = (event) => {
-    event.preventDefault();
-    let i = this.state.configIterator;
-
-    if (i === 0) {
-      this.setState((currState) => {
-        let newState = {};
-        newState.triggers = currState.triggers;
-        newState.triggers.current = { y: {}, n: {}, u: {} };
-        return newState;
-      });
-    }
-
-    let which = event.which;
-    let code = event.keyCode;
-
-    if (i >= 4) {
-      this.saveConfigAndExitMenu();
-    } else if (
-      Object.keys(this.state.triggers.current).every((key) =>
-        Object.values(this.state.triggers.current[key]).every(
-          (val) => val !== which && val !== code
-        )
-      )
-    ) {
-      let newState = {
-        triggers: this.state.triggers,
-        z: this.state.z,
-      };
-      newState["configIterator"] = i + 1;
-
-      if (i === 0) {
-        newState.z.y = 2;
-      } else if (i === 1) {
-        newState.z.n = 2;
-        newState.triggers.current.y = { which, code };
-      } else if (i === 2) {
-        newState.z.u = 2;
-        newState.triggers.current.n = { which, code };
-      } else if (i === 3) {
-        newState.triggers.current.u = { which, code };
-      }
-      this.setState(newState);
-    }
   };
 
   switchToColumn = (destination, word) => {
@@ -245,10 +145,15 @@ class App extends Component {
   };
 
   showConfigMenu = () => {
+    let random = this.state.configLang;
+
+    while (random === this.state.configLang) {
+      random = Math.floor(Math.random() * 3); //SCREW
+    }
+
     this.setState({
-      showConfigOverlay: true,
-      configLang: Math.floor(Math.random() * this.state.configText.length),
-      configIterator: 0,
+      showConfigMenu: true,
+      configLang: random,
     });
   };
 
@@ -300,25 +205,6 @@ class App extends Component {
     this.updateScroll(destination);
   };
 
-  quitConfig = () => {
-    let { triggers } = this.state;
-
-    let newState = {
-      showConfigOverlay: false,
-      triggers,
-      z: { y: 0, n: 0, u: 0 },
-    };
-    newState.triggers.current = { y: {}, n: {}, u: {} };
-
-    Object.keys(triggers.backup).forEach((triggerName) =>
-      Object.keys(triggers.backup[triggerName]).forEach((codeType) => {
-        newState.triggers.current[triggerName][codeType] =
-          triggers.backup[triggerName][codeType];
-      })
-    );
-    this.setState(newState);
-  };
-
   startAgain = () => {
     this.setState((currState) => {
       let newState = { list: {} };
@@ -339,78 +225,35 @@ class App extends Component {
   };
 
   uploadList = () => {
-    alert("upload a list");
+    this.uploadText().then((text) => {
+      console.log(text);
+    });
+    // alert("upload a list");
   };
 
   render() {
     return (
       <div id="grossuberbox" className={styles.grossuberbox}>
-        <a href={words} target="_blank">
+        <a href={words} target="_blank" rel="noopener noreferrer">
           Visit W3Schools.com!
         </a>
-        {this.state.showConfigOverlay ? (
-          <>
-            <div className={styles.obscurus}></div>
 
-            <div className={styles.superConfigOptionsHolder}>
-              <div className={styles.configOptionsHolder}>
-                <img
-                  className={styles.clippy}
-                  src={clippy}
-                  alt="paperclip cartoon character"
-                />
-                <div className={styles.configTextHolder}>
-                  <p className={styles.configText}>
-                    {
-                      this.state.configText[this.state.configLang][
-                        this.state.configIterator
-                      ]
-                    }
-                  </p>
-                  {this.state.configIterator === 0 && (
-                    <button
-                      id="Initial OK"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        this.configureKeys(e);
-                      }}
-                      className={`${styles.configOK} ${styles.OKnomargin}`}
-                    >
-                      {this.state.configText[this.state.configLang][6]}
-                    </button>
-                  )}
-                  {this.state.configIterator === 4 && (
-                    <button
-                      id="Final OK"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        this.saveConfigAndExitMenu();
-                      }}
-                      className={`${styles.configOK} ${styles.OKmargin}`}
-                    >
-                      {this.state.configText[this.state.configLang][5]}
-                    </button>
-                  )}
-                </div>
-              </div>
-              {this.state.configIterator !== 4 && (
-                <button
-                  id="Quit Menu"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    this.quitConfig();
-                  }}
-                  className={styles.configX}
-                >
-                  <span role="img" aria-label="Red X">
-                    ❌
-                  </span>
-                </button>
-              )}
-            </div>
-          </>
-        ) : (
-          ""
+        {this.state.showConfigMenu && (
+          <div className={styles.obscurus}>
+            <ConfigMenu
+              triggers={this.state.triggers}
+              z={this.state.z}
+              configLang={this.state.configLang}
+              keepListening={this.keepListening}
+              setAppState={this.setAppState}
+            />
+          </div>
+        )}
+
+        {this.state.showUploadMenu && (
+          <div className={styles.obscurus}>
+            <UploadMenu setAppState={this.setAppState} />
+          </div>
         )}
 
         <div className={styles.uberbox}>
@@ -419,7 +262,7 @@ class App extends Component {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  this.uploadList();
+                  this.setState({ showUploadMenu: true });
                 }}
                 id="Upload List"
                 className={`${styles.tinyButton} ${styles.uploadButton}`}
@@ -459,6 +302,7 @@ class App extends Component {
                     zIndex: this.state.z[label],
                   }}
                   id={`${label}Button`}
+                  key={`${label}Button`}
                   onClick={(e) => {
                     e.preventDefault();
                     this.putWordInList(label);
@@ -479,22 +323,29 @@ class App extends Component {
               return (
                 <div
                   id={`${label}List`}
+                  key={`${label}List`}
                   className={`${styles.list} ${
                     label === "y" ? styles.yList : styles.nList
                   }`}
                 >
-                  {this.state.list[`${label}List`].map((x) => (
+                  {this.state.list[`${label}List`].map((word) => (
                     <p
+                      id={`${word}-${(Math.random() * 1000)
+                        .toString()
+                        .slice(0, 3)}`}
+                      key={`${word}-${(Math.random() * 1000)
+                        .toString()
+                        .slice(0, 3)}`}
                       onClick={(e) => {
                         e.preventDefault();
                         this.switchToColumn(
                           `${label === "y" ? "n" : "y"}List`,
-                          x
+                          word
                         );
                       }}
                       className={styles.wordinlist}
                     >
-                      {x}
+                      {word}
                     </p>
                   ))}
                 </div>

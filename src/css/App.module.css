@@ -113,63 +113,6 @@
   cursor: e-resize;
 }
 
-.obscurus {
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  opacity: 0.65;
-  z-index: 1;
-  position: fixed;
-}
-
-.superConfigOptionsHolder {
-  height: 160px;
-  width: 420px;
-  position: fixed;
-  align-self: center;
-  top: 75px;
-  z-index: 2;
-  background-color: yellow;
-  border-radius: 10pt;
-  display: flex;
-  flex-direction: row;
-}
-
-.configOptionsHolder {
-  height: 95%;
-  width: 100%;
-  z-index: 2;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-
-.configTextHolder {
-  margin: 2.5% 0% 2.5% 2.5%;
-  font-size: 15.5pt;
-  align-self: center;
-  width: 90%;
-  position: relative;
-  line-height: 30px;
-  text-align: center;
-  height: 95%;
-  top: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.configText {
-  margin: 0;
-}
-
-.clippy {
-  height: 80%;
-  margin: 5%;
-  margin-left: 7%;
-  margin-right: 2%;
-}
-
 .littleButton:hover {
   cursor: pointer;
 }
@@ -192,23 +135,6 @@
   background-color: var(--nList2);
 }
 
-.configOK {
-  height: 35px;
-  width: 100px;
-  border-radius: 10px;
-  font-size: 18px;
-  align-self: center;
-  background-color: white;
-}
-
-.OKmargin {
-  margin-top: 20px;
-}
-
-.OKnomargin {
-  margin-top: 2.5px;
-}
-
 .uButton {
   z-index: 2;
 }
@@ -224,18 +150,6 @@
 
 .configButton {
   background-color: white;
-}
-
-.configX {
-  position: relative;
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  width: 30px;
-  height: 30px;
-  padding: 0px;
-  left: 0px;
 }
 
 .tinyButtonHolder {
@@ -264,4 +178,25 @@
   margin-top: 9px;
   color: #777777;
   font-size: 13px;
+}
+
+.obscurus {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.65);
+  z-index: 1;
+  position: fixed;
+}
+
+.configMenuHolder {
+  background-color: darkorchid;
+  align-self: center;
+  align-items: center;
+  align-content: center;
+  justify-self: center;
+  justify-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 100%;
+  position: fixed;
 }

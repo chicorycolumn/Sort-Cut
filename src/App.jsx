@@ -7,8 +7,13 @@ import UploadMenu from "./UploadMenu.jsx";
 
 class App extends Component {
   state = {
+    showConfigMenu: false,
+    showUploadMenu: false,
+    paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px", // Deliberately 0.5 and not 0, as the 0.5 is unique to mounting, so can avoid endless loop in CDU for overflown check.
+    separator: "-",
+    weAreFinished: false,
     configLang: 0,
-    i: 0,
+    i: 1,
     list: {
       yList: [],
       nList: [],
@@ -40,8 +45,6 @@ class App extends Component {
     },
 
     mostRecentAction: { word: null, origin: null, destination: null },
-    showConfigMenu: false,
-    showUploadMenu: true,
 
     configureKeys: () => {
       console.log("configureKeys not set yet in App.jsx");
@@ -50,6 +53,15 @@ class App extends Component {
 
   setAppState = (newState) => {
     this.setState(newState);
+  };
+
+  wipeAppState = () => {
+    this.setState({
+      paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px",
+      weAreFinished: false,
+      i: 1,
+      mostRecentAction: { word: null, origin: null, destination: null },
+    });
   };
 
   componentDidMount() {
@@ -62,17 +74,43 @@ class App extends Component {
       newState.list = currState.list;
       newState.list.wordlist = animals;
       newState.list.wordlistBackup = animals;
-      // if (currState.list.wordlist.length) {
-      //   newState.list = currState.list;
-      //   newState.list.wordlistBackup = currState.list.wordlist.slice(0);
-      // }
 
       return newState;
     });
     this.keepListening();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.showUploadMenu && this.state.showUploadMenu) {
+      document.onkeyup = function (event) {};
+    }
+    if (!prevState.weAreFinished && this.state.weAreFinished) {
+      this.keepListening(true);
+    }
+    if (prevState.weAreFinished && !this.state.weAreFinished) {
+      this.keepListening();
+    }
+    if (prevState.showUploadMenu && !this.state.showUploadMenu) {
+      this.keepListening();
+      this.wipeAppState();
+    }
+
+    if (
+      this.state.i === 1 &&
+      document.getElementById(`bigText${this.state.i}`) &&
+      this.state.paddingOfBigtextboxBasedOnWhetherOverflowing === "0.5px"
+    ) {
+      this.isOverflown(document.getElementById(`bigText${this.state.i}`));
+    }
+
+    if (prevState.i !== this.state.i) {
+      this.isOverflown(document.getElementById(`bigText${this.state.i}`));
+
+      this.setState({
+        weAreFinished: this.state.i > this.state.list.wordlistBackup.length,
+      });
+    }
+
     let configureKeys = this.state.configureKeys;
     if (this.state.showConfigMenu) {
       document.onkeyup = function (event) {
@@ -93,12 +131,13 @@ class App extends Component {
     }, 60);
   };
 
-  keepListening = () => {
-    let { showConfigMenu, triggers } = this.state;
+  keepListening = (shouldIOnlyAllowPressOfUndoButton) => {
+    let { showConfigMenu, triggers, showUploadMenu } = this.state;
     let pressButtonColor = this.pressButtonColor;
 
     document.onkeyup = function (event) {
-      if (!showConfigMenu) {
+      event.preventDefault();
+      if (!(showConfigMenu || showUploadMenu)) {
         let which = event.which;
         let code = event.keyCode;
 
@@ -107,8 +146,15 @@ class App extends Component {
             which === triggers.current[label].which ||
             code === triggers.current[label].code
           ) {
-            document.getElementById(`${label}Button`).click();
-            pressButtonColor(label);
+            if (shouldIOnlyAllowPressOfUndoButton) {
+              if (label === "u") {
+                document.getElementById(`${label}Button`).click();
+                pressButtonColor(label);
+              }
+            } else {
+              document.getElementById(`${label}Button`).click();
+              pressButtonColor(label);
+            }
           }
         });
       }
@@ -144,7 +190,31 @@ class App extends Component {
     this.updateScroll(destination);
   };
 
+  downloadList = (labelWord) => {
+    let splitter;
+
+    splitter = this.state.separator;
+    // splitter = new RegExp(this.state.separator);
+    // if (this.state.separator.split("").includes("\\")) {
+    //   splitter = new RegExp("\\" + this.state.separator[1]);
+    // }
+    let stringFromWordArray = this.state.list[
+      `${labelWord[0].toLowerCase()}List`
+    ].join(splitter);
+    let myblob = new Blob([stringFromWordArray], {
+      type: "text/plain",
+    });
+
+    const url = URL.createObjectURL(myblob);
+    const link = document.createElement("a");
+    link.download = `${labelWord}-List-${Date.now()}.txt`;
+    link.href = url;
+    link.click();
+  };
+
   showConfigMenu = () => {
+    document.getElementById("Show Config").blur();
+
     let random = this.state.configLang;
 
     while (random === this.state.configLang) {
@@ -170,39 +240,57 @@ class App extends Component {
       let redactedDestination = this.state.list[destination].filter(
         (x) => x !== word
       );
-      let revertedOrigin = this.state.list[origin].slice(0);
-      if (origin === "wordlist") {
-        revertedOrigin.unshift(word);
-      } else {
-        revertedOrigin.push(word);
-      }
       let newState = {};
       newState.list = this.state.list;
-      newState.list[origin] = revertedOrigin;
       newState.list[destination] = redactedDestination;
       newState.mostRecentAction = {};
+      if (origin === "wordlist") {
+        newState.i = this.state.i - 1;
+        this.updateScroll(destination);
+      } else {
+        let revertedOrigin = this.state.list[origin].slice(0);
+        revertedOrigin.push(word);
+        newState.list[origin] = revertedOrigin;
+      }
       this.setState(newState);
+      if (origin === "yList" || origin === "nList") {
+        this.updateScroll(origin);
+      }
+      // if (destination === "yList" || destination === "nList") {
+      //   this.updateScroll(destination);
+      // }
+    }
+  };
 
-      this.updateScroll(destination);
+  isOverflown = (element) => {
+    if (
+      element.scrollHeight > element.clientHeight ||
+      element.scrollWidth > element.clientWidth
+    ) {
+      this.setState({ paddingOfBigtextboxBasedOnWhetherOverflowing: "25px" });
+    } else {
+      this.setState({ paddingOfBigtextboxBasedOnWhetherOverflowing: "0px" });
     }
   };
 
   putWordInList = (label) => {
-    let destination = `${label}List`;
-    let newI = this.state.i + 1;
-    let newList = this.state.list;
-    let word = this.state.list.wordlist[this.state.i];
-    newList[`${label}List`].push(word);
-    this.setState({
-      i: newI,
-      list: newList,
-      mostRecentAction: {
-        word,
-        destination,
-        origin: "wordlist",
-      },
-    });
-    this.updateScroll(destination);
+    if (!(this.state.weAreFinished || this.state.showConfigMenu)) {
+      let destination = `${label}List`;
+      let newI = this.state.i + 1;
+      let newList = this.state.list;
+      let word = this.state.list.wordlist[this.state.i - 1];
+      newList[`${label}List`].push(word);
+      this.setState({
+        i: newI,
+        list: newList,
+        mostRecentAction: {
+          word,
+          destination,
+          origin: "wordlist",
+        },
+      });
+      this.updateScroll(destination);
+    }
   };
 
   startAgain = () => {
@@ -213,7 +301,7 @@ class App extends Component {
       newState.list.nList = [];
       newState.list.wordlist = currState.list.wordlistBackup.slice(0);
       newState.list.wordlistBackup = currState.list.wordlistBackup.slice(0);
-      newState.i = 0;
+      newState.i = 1;
       newState.mostRecentAction = {
         word: null,
         origin: null,
@@ -222,13 +310,6 @@ class App extends Component {
 
       return newState;
     });
-  };
-
-  uploadList = () => {
-    this.uploadText().then((text) => {
-      console.log(text);
-    });
-    // alert("upload a list");
   };
 
   render() {
@@ -257,9 +338,21 @@ class App extends Component {
         )}
 
         <div className={styles.uberbox}>
-          <div className={styles.bigwordbox}>
+          <div
+            className={styles.bigwordbox}
+            style={{
+              backgroundColor: this.state.weAreFinished && "#eeeeee",
+            }}
+          >
             <div className={styles.tinyButtonHolder}>
               <button
+                style={{
+                  color: this.state.weAreFinished && "black",
+                  fontWeight: this.state.weAreFinished && "550",
+                  pointerEvents:
+                    (this.state.showConfigMenu || this.state.showUploadMenu) &&
+                    "none",
+                }}
                 onClick={(e) => {
                   e.preventDefault();
                   this.setState({ showUploadMenu: true });
@@ -271,10 +364,19 @@ class App extends Component {
               </button>
 
               <p className={styles.counter}>
-                {`${this.state.i} of ${this.state.list.wordlist.length}`}
+                {this.state.weAreFinished
+                  ? `Yes: ${this.state.list.yList.length} - No: ${this.state.list.nList.length}`
+                  : `${this.state.i} of ${this.state.list.wordlist.length}`}
               </p>
 
               <button
+                style={{
+                  color: this.state.weAreFinished && "black",
+                  fontWeight: this.state.weAreFinished && "550",
+                  pointerEvents:
+                    (this.state.showConfigMenu || this.state.showUploadMenu) &&
+                    "none",
+                }}
                 onClick={(e) => {
                   e.preventDefault();
                   this.startAgain();
@@ -286,9 +388,15 @@ class App extends Component {
               </button>
             </div>
 
-            <div className={styles.bigtextbox}>
-              <p className={styles.bigText}>
-                {this.state.list.wordlist[this.state.i]}
+            <div
+              className={styles.bigtextbox}
+              style={{
+                paddingTop: this.state
+                  .paddingOfBigtextboxBasedOnWhetherOverflowing,
+              }}
+            >
+              <p className={styles.bigText} id={`bigText${this.state.i}`}>
+                {this.state.list.wordlist[this.state.i - 1]}
               </p>
             </div>
           </div>
@@ -300,6 +408,10 @@ class App extends Component {
                   style={{
                     backgroundColor: this.state.colors.display[label],
                     zIndex: this.state.z[label],
+                    pointerEvents:
+                      (this.state.showConfigMenu ||
+                        this.state.showUploadMenu) &&
+                      "none",
                   }}
                   id={`${label}Button`}
                   key={`${label}Button`}
@@ -355,6 +467,12 @@ class App extends Component {
         </div>
         <div className={styles.littleButtonsContainer}>
           <button
+            style={{
+              pointerEvents:
+                (this.state.showConfigMenu || this.state.showUploadMenu) &&
+                "none",
+            }}
+            id="Show Config"
             onClick={(e) => {
               e.preventDefault();
               this.showConfigMenu();
@@ -364,33 +482,36 @@ class App extends Component {
             Set keys
           </button>
 
-          <button
-            id="Download yList"
-            onClick={(e) => {
-              e.preventDefault();
-              // this.showConfigMenu();
-            }}
-            className={`${styles.littleButton} ${styles.yListButton}`}
-          >
-            Download Yes
-          </button>
-
-          <button
-            id="Download nList"
-            onClick={(e) => {
-              e.preventDefault();
-              // this.showConfigMenu();
-            }}
-            className={`${styles.littleButton} ${styles.nListButton}`}
-          >
-            Download No
-          </button>
+          {["Yes", "No"].map((labelWord) => {
+            return (
+              <button
+                style={{
+                  pointerEvents:
+                    (this.state.showConfigMenu || this.state.showUploadMenu) &&
+                    "none",
+                }}
+                id={`Download ${labelWord[0].toLowerCase()}List`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.downloadList(labelWord);
+                }}
+                className={`${styles.littleButton} ${
+                  labelWord === "Yes" ? styles.yListButton : styles.nListButton
+                }`}
+              >
+                Download {labelWord}
+              </button>
+            );
+          })}
 
           <button
             id="uButton"
             style={{
               backgroundColor: this.state.colors.display.u,
               zIndex: this.state.z.u,
+              pointerEvents:
+                (this.state.showConfigMenu || this.state.showUploadMenu) &&
+                "none",
             }}
             onClick={(e) => {
               e.preventDefault();

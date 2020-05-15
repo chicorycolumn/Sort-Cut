@@ -1,3 +1,33 @@
+export const configText = [
+  [
+    "Bonjour! Je suis Monsieur Clippe, and I will aide vous to configure les boutons. Press any touche to continue.",
+    "Alors, first please press the touche, ah, I mean the key, that you want to mean OUI.",
+    "Très bien! Now please choisir the key to mean NON.",
+    "Et finalment, which touche voulez-vous for the bouton défaire? Ah, pardon! Je vais dire the UNDO button.",
+    "Bien joué, et au revoir!",
+    "Merci!",
+    "D'accord",
+  ],
+  [
+    "Guten tag! Ich bin Herr Klip, and I will help you zu konfigurieren the buttons. Drücken Sie any key to continue.",
+    "Lasst uns beginnen! First please drücken, ah, I mean press - the key that you want to mean JA.",
+    "Fantastisch! Please choose the Taste you want to mean NEIN.",
+    "Und endlich, which Taste do you want as the Rückgängig? Ach, entschuldige! Ich meine the UNDO button.",
+    "Gut gemacht, und auf Wiedersehen!",
+    "Danke!",
+    "Gut",
+  ],
+  [
+    "Hola! Yo soy Señor Clipedro, and I will help you configurar los botones. Press any tecla to continue.",
+    "Pues, to start please press the tecla, ay, quiero decir the key, that you want to mean SÍ.",
+    "Genial! Ahora please elige the key to mean NO.",
+    "Y al fin, which tecla quieres for the botón deshacer? Aj, disculpe! Eso es the UNDO button.",
+    "Bien hecho, y adios!",
+    "Gracias!",
+    "Vale",
+  ],
+];
+
 export const keys = {
   "8": "⌫",
   "9": "⇆",
@@ -103,6 +133,8 @@ export const keys = {
 };
 
 export const animals = [
+  // "WMWMWMWMWMWMWMWMWMWMWMWMWMWM",
+  // "Under the grass where the worms live is a cave where only a nomad knows.",
   "alligator",
   "bear",
   "cat",

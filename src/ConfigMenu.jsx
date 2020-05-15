@@ -5,39 +5,11 @@ import clippy1 from "./images/clippy1.png";
 import clippy2 from "./images/clippy2.png";
 import clippy3 from "./images/clippy3.png";
 import clippy4 from "./images/clippy4.png";
+import { configText } from "./utils.js";
 
 class ConfigMenu extends Component {
   state = {
     clippy: [clippy0, clippy1, clippy2, clippy3, clippy4],
-    configText: [
-      [
-        "Bonjour! Je suis Monsieur Clippe, and I will aide vous to configure les boutons. Press any touche to continue.",
-        "Alors, first please press the touche, ah, I mean the key, that you want to mean OUI.",
-        "Très bien! Now please choisir the key to mean NON.",
-        "Et finalment, which touche voulez-vous for the bouton défaire? Ah, pardon! Je vais dire the UNDO button.",
-        "Bien joué, et au revoir!",
-        "Merci!",
-        "D'accord",
-      ],
-      [
-        "Guten tag! Ich bin Herr Klip, and I will help you zu konfigurieren the buttons. Drücken Sie any key to continue.",
-        "Lasst uns beginnen! First please drücken, ah, I mean press - the key that you want to mean JA.",
-        "Fantastisch! Please choose the Taste you want to mean NEIN.",
-        "Und endlich, which Taste do you want as the Rückgängig? Ach, entschuldige! Ich meine the UNDO button.",
-        "Gut gemacht, und auf Wiedersehen!",
-        "Danke!",
-        "Gut",
-      ],
-      [
-        "Hola! Yo soy Señor Clipedro, and I will help you configurar los botones. Press any tecla to continue.",
-        "Pues, to start please press the tecla, ay, quiero decir the key, that you want to mean SÍ.",
-        "Genial! Ahora please elige the key to mean NO.",
-        "Y al fin, which tecla quieres for the botón deshacer? Aj, disculpe! Eso es the UNDO button.",
-        "Bien hecho, y adios!",
-        "Gracias!",
-        "Vale",
-      ],
-    ],
     configIterator: 0,
   };
 
@@ -46,6 +18,7 @@ class ConfigMenu extends Component {
     this.setState({
       configIterator: 0,
     });
+    document.getElementById("superConfigOptionsHolder").focus();
   }
 
   saveConfigAndExitMenu = () => {
@@ -91,6 +64,8 @@ class ConfigMenu extends Component {
   configureKeys = (event) => {
     event.preventDefault();
     let i = this.state.configIterator;
+    let which = event.which;
+    let code = event.keyCode;
 
     if (i === 0) {
       let newState = {};
@@ -98,10 +73,6 @@ class ConfigMenu extends Component {
       newState.triggers.current = { y: {}, n: {}, u: {} };
       this.props.setAppState(newState);
     }
-
-    let which = event.which;
-    let code = event.keyCode;
-
     if (i >= 4) {
       this.saveConfigAndExitMenu();
     } else if (
@@ -135,7 +106,10 @@ class ConfigMenu extends Component {
   render() {
     return (
       <div className={styles.configMenuHolder}>
-        <div className={styles.superConfigOptionsHolder}>
+        <div
+          className={styles.superConfigOptionsHolder}
+          id="superConfigOptionsHolder"
+        >
           <div className={styles.configOptionsHolder}>
             <img
               className={styles.clippy}
@@ -144,11 +118,7 @@ class ConfigMenu extends Component {
             />
             <div className={styles.configTextHolder}>
               <p className={styles.configText}>
-                {
-                  this.state.configText[this.props.configLang][
-                    this.state.configIterator
-                  ]
-                }
+                {configText[this.props.configLang][this.state.configIterator]}
               </p>
               {this.state.configIterator === 0 && (
                 <button
@@ -159,7 +129,7 @@ class ConfigMenu extends Component {
                   }}
                   className={`${styles.configOK} ${styles.OKnomargin}`}
                 >
-                  {this.state.configText[this.props.configLang][6]}
+                  {configText[this.props.configLang][6]}
                 </button>
               )}
               {this.state.configIterator === 4 && (
@@ -171,7 +141,7 @@ class ConfigMenu extends Component {
                   }}
                   className={`${styles.configOK} ${styles.OKmargin}`}
                 >
-                  {this.state.configText[this.props.configLang][5]}
+                  {configText[this.props.configLang][5]}
                 </button>
               )}
             </div>

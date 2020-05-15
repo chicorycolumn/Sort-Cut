@@ -13,10 +13,9 @@
   flex-direction: row;
 }
 
-.two {
+.textarea {
   box-sizing: border-box;
   padding: 20px;
-
   opacity: 1;
   height: 320px;
   width: 420px;
@@ -26,4 +25,18 @@
   z-index: 2;
   background-color: lightcyan;
   border-radius: 10pt;
+}
+
+.uploadX {
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: 30px;
+  height: 30px;
+  padding: 0px;
+  z-index: 3;
+  margin-right: -387.5px;
+  margin-top: -327.5px;
 }

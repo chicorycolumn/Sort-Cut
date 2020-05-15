@@ -1,10 +1,28 @@
+.uploadMenuHolder {
+  /* background-color: white;
+  opacity: 0.5; */
+  top: 80px;
+  align-self: center;
+  align-items: center;
+  align-content: center;
+  justify-self: center;
+  justify-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 72.5%;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .superUploadOptionsHolder {
   opacity: 1;
   height: 160px;
   width: 420px;
-  position: fixed;
+  position: relative;
   align-self: center;
-  top: 75px;
+  /* top: 75px; */
   z-index: 2;
   background-color: yellow;
   border-radius: 10pt;
@@ -76,19 +94,17 @@
   left: 0px;
 }
 
-.uploadMenuHolder {
-  /* background-color: blue; */
-  align-self: center;
-  align-items: center;
-  align-content: center;
-  justify-self: center;
-  justify-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  display: flex;
-  flex-direction: row;
+.uploadX2 {
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: 30px;
+  height: 30px;
+  padding: 0px;
+  left: 5px;
+  bottom: 8px;
 }
 
 .uploadButton {
@@ -128,4 +144,117 @@
   margin: 0;
 
   color: blue;
+}
+
+.sep1 {
+  /* background-color: blue; */
+  align-self: center;
+  align-items: center;
+  align-content: center;
+  justify-self: center;
+  justify-items: center;
+  justify-content: center;
+  /* width: 100%;
+  height: 100%; */
+  /* top: 200px; */
+  height: 350px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sep2 {
+  opacity: 1;
+  height: 170px;
+  width: 280px;
+  position: relative;
+  /* align-self: center; */
+  /* top: 250px; */
+  z-index: 2;
+  background-color: whitesmoke;
+  border-radius: 10pt;
+  display: flex;
+  flex-direction: row;
+}
+
+.sep3 {
+  height: 95%;
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.sep4 {
+  margin: 2.5% 0% 2.5% 2.5%;
+  font-size: 15.5pt;
+  align-self: center;
+  width: 90%;
+  position: relative;
+  line-height: 30px;
+  text-align: center;
+  height: 95%;
+  top: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.sepLeft {
+  /* border: black dotted 2pt; */
+  display: flex;
+  flex-direction: column;
+}
+
+.sepRight {
+  /* border: blue dotted 2pt; */
+  width: 100%;
+  font-size: 15px;
+  line-height: 19px;
+  margin: 0;
+  margin-left: 15px;
+}
+
+.littleUploadButton2 {
+  /* margin: 0; */
+  background-color: white;
+  border-radius: 5px;
+  height: 45px;
+  font-size: 12px;
+  width: 70px;
+  margin: 2.5px 0px 2.5px 0px;
+}
+
+.screenshot {
+  width: 50%;
+  position: relative;
+}
+
+.sepRightInput {
+  width: 60px;
+  height: 30px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.sepRightInstructions {
+  margin: 10px 0px 10px 0px;
+  /* margin-right: 0; */
+}
+
+.fileConfirmationButton {
+  height: 60px;
+  width: 320px;
+  border-radius: 10px;
+  font-size: 15px;
+  align-self: center;
+  background-color: white;
+  position: relative;
+  top: -290px;
+  background-color: chartreuse;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

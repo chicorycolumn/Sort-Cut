@@ -11,6 +11,7 @@ const egSeps = [
 
 class UploadMenu extends Component {
   state = {
+    cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox: "80px",
     showFileConfirmation: false,
     newStateForApp: null,
     filename: "",
@@ -36,6 +37,14 @@ class UploadMenu extends Component {
     let array = string.split(splitter);
     return array;
   };
+
+  componentDidMount() {
+    let bwb = document.getElementById("bigwordbox");
+    var rect = bwb.getBoundingClientRect();
+    this.setState({
+      cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox: `${rect.top + 15}px`,
+    });
+  }
 
   gobbleInput = (txtFile) => {
     let input;
@@ -112,7 +121,13 @@ class UploadMenu extends Component {
 
   render() {
     return (
-      <div className={styles.uploadMenuHolder}>
+      <div
+        id="uploadMenuHolder"
+        style={{
+          top: this.state.cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox,
+        }}
+        className={styles.uploadMenuHolder}
+      >
         <div className={styles.superUploadOptionsHolder}>
           <div className={styles.uploadOptionsHolder}>
             <div className={styles.uploadTextHolder}>

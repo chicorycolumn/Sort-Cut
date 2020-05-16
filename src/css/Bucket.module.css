@@ -7,28 +7,40 @@
   justify-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
-  position: fixed;
+  height: 10%;
+  position: relative;
   display: flex;
   flex-direction: row;
 }
 
-.textarea {
+.textareaHolder {
+  /* border: yellow dotted 2pt; */
+  top: 260px;
   box-sizing: border-box;
-  padding: 20px;
   opacity: 1;
   height: 320px;
-  width: 420px;
+  width: 480px;
   position: fixed;
   align-self: center;
-  top: 260px;
   z-index: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.textarea {
+  resize: none;
+  margin-left: 29px;
+  padding: 20px;
   background-color: lightcyan;
   border-radius: 10pt;
+  height: 80%;
+  width: 79%;
 }
 
 .uploadX {
   position: relative;
+  left: -30px;
   cursor: pointer;
   background-color: transparent;
   border: none;
@@ -37,6 +49,6 @@
   height: 30px;
   padding: 0px;
   z-index: 3;
-  margin-right: -387.5px;
-  margin-top: -327.5px;
+  /* margin-right: -387.5px;
+  margin-top: -270px; */
 }

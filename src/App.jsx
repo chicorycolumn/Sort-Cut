@@ -65,6 +65,17 @@ class App extends Component {
   };
 
   componentDidMount() {
+    // let observer = new MutationObserver(function (mutations) {
+    //   mutations.forEach(function (mutationRecord) {
+    //     console.log("style changed!");
+    //   });
+    // });
+
+    // observer.observe(bwb, {
+    //   attributes: true,
+    //   attributeFilter: [rect.top, rect.right, rect.bottom, rect.left],
+    // });
+
     this.setState((currState) => {
       let newState = { colors: currState.colors };
       Object.keys(newState.colors.display).forEach((key) => {
@@ -220,6 +231,7 @@ class App extends Component {
     while (random === this.state.configLang) {
       random = Math.floor(Math.random() * 3); //SCREW
     }
+    // this.checkCoordinatesOfBigwordboxAndAdjustMenuAccordingly();
 
     this.setState({
       showConfigMenu: true,
@@ -233,6 +245,15 @@ class App extends Component {
       element.scrollTop = element.scrollHeight;
     }, 50);
   };
+
+  // checkCoordinatesOfBigwordboxAndAdjustMenuAccordingly = () => {
+  //   let bwb = document.getElementById("bigwordbox");
+  //   var rect = bwb.getBoundingClientRect();
+  //   console.log(
+  //     "bigwordbox",
+  //     `top:${Math.round(rect.top)}, bottom:${Math.round(rect.bottom)}`
+  //   );
+  // };
 
   undo = () => {
     let { word, destination, origin } = this.state.mostRecentAction;
@@ -315,9 +336,9 @@ class App extends Component {
   render() {
     return (
       <div id="grossuberbox" className={styles.grossuberbox}>
-        <a href={words} target="_blank" rel="noopener noreferrer">
+        {/* <a href={words} target="_blank" rel="noopener noreferrer">
           Visit W3Schools.com!
-        </a>
+        </a> */}
 
         {this.state.showConfigMenu && (
           <div className={styles.obscurus}>
@@ -339,6 +360,7 @@ class App extends Component {
 
         <div className={styles.uberbox}>
           <div
+            id="bigwordbox"
             className={styles.bigwordbox}
             style={{
               backgroundColor: this.state.weAreFinished && "#eeeeee",
@@ -355,6 +377,7 @@ class App extends Component {
                 }}
                 onClick={(e) => {
                   e.preventDefault();
+                  // this.checkCoordinatesOfBigwordboxAndAdjustMenuAccordingly();
                   this.setState({ showUploadMenu: true });
                 }}
                 id="Upload List"

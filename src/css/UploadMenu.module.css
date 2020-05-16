@@ -19,6 +19,7 @@
 .superUploadOptionsHolder {
   opacity: 1;
   height: 160px;
+  min-height: 160px;
   width: 420px;
   position: relative;
   align-self: center;
@@ -148,6 +149,7 @@
 
 .sep1 {
   /* background-color: blue; */
+  top: 15px;
   align-self: center;
   align-items: center;
   align-content: center;
@@ -228,6 +230,7 @@
 }
 
 .screenshot {
+  top: 20px;
   width: 50%;
   position: relative;
 }

@@ -11,6 +11,7 @@ class ConfigMenu extends Component {
   state = {
     clippy: [clippy0, clippy1, clippy2, clippy3, clippy4],
     configIterator: 0,
+    cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox: "75px",
   };
 
   componentDidMount() {
@@ -19,6 +20,12 @@ class ConfigMenu extends Component {
       configIterator: 0,
     });
     document.getElementById("superConfigOptionsHolder").focus();
+
+    let bwb = document.getElementById("bigwordbox");
+    var rect = bwb.getBoundingClientRect();
+    this.setState({
+      cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox: `${rect.top + 10}px`,
+    });
   }
 
   saveConfigAndExitMenu = () => {
@@ -107,6 +114,9 @@ class ConfigMenu extends Component {
     return (
       <div className={styles.configMenuHolder}>
         <div
+          style={{
+            top: this.state.cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox,
+          }}
           className={styles.superConfigOptionsHolder}
           id="superConfigOptionsHolder"
         >

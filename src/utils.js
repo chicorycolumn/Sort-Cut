@@ -145,7 +145,7 @@ export const animals = [
   "horse",
   "iguana",
   "jackrabbit",
-  "kangfaroo",
+  "kangaroo",
   "lemur",
   "moray eel",
   "narhwal",

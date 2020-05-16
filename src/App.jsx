@@ -7,6 +7,7 @@ import UploadMenu from "./UploadMenu.jsx";
 
 class App extends Component {
   state = {
+    invisibleTextarea: "",
     showConfigMenu: false,
     showUploadMenu: false,
     paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px", // Deliberately 0.5 and not 0, as the 0.5 is unique to mounting, so can avoid endless loop in CDU for overflown check.
@@ -201,6 +202,23 @@ class App extends Component {
     this.updateScroll(destination);
   };
 
+  copyList = (labelWord) => {
+    /* Get the text field */
+
+    this.setState({
+      invisibleTextarea: this.state.list[
+        `${labelWord.toLowerCase()[0]}List`
+      ].slice(0),
+    });
+
+    setTimeout(() => {
+      let el = document.getElementById("invisibleTextarea");
+      el.select();
+      el.setSelectionRange(0, 99999); /*For mobile devices*/
+      document.execCommand("copy");
+    }, 500);
+  };
+
   downloadList = (labelWord) => {
     let splitter;
 
@@ -288,7 +306,7 @@ class App extends Component {
       element.scrollHeight > element.clientHeight ||
       element.scrollWidth > element.clientWidth
     ) {
-      this.setState({ paddingOfBigtextboxBasedOnWhetherOverflowing: "25px" });
+      this.setState({ paddingOfBigtextboxBasedOnWhetherOverflowing: "27.5px" });
     } else {
       this.setState({ paddingOfBigtextboxBasedOnWhetherOverflowing: "0px" });
     }
@@ -339,6 +357,12 @@ class App extends Component {
         {/* <a href={words} target="_blank" rel="noopener noreferrer">
           Visit W3Schools.com!
         </a> */}
+
+        <textarea
+          value={this.state.invisibleTextarea}
+          className={styles.invisibleTextarea}
+          id="invisibleTextarea"
+        ></textarea>
 
         {this.state.showConfigMenu && (
           <div className={styles.obscurus}>
@@ -411,14 +435,15 @@ class App extends Component {
               </button>
             </div>
 
-            <div
-              className={styles.bigtextbox}
-              style={{
-                paddingTop: this.state
-                  .paddingOfBigtextboxBasedOnWhetherOverflowing,
-              }}
-            >
-              <p className={styles.bigText} id={`bigText${this.state.i}`}>
+            <div className={styles.bigtextbox}>
+              <p
+                style={{
+                  paddingTop: this.state
+                    .paddingOfBigtextboxBasedOnWhetherOverflowing,
+                }}
+                className={styles.bigText}
+                id={`bigText${this.state.i}`}
+              >
                 {this.state.list.wordlist[this.state.i - 1]}
               </p>
             </div>
@@ -507,23 +532,55 @@ class App extends Component {
 
           {["Yes", "No"].map((labelWord) => {
             return (
-              <button
-                style={{
-                  pointerEvents:
-                    (this.state.showConfigMenu || this.state.showUploadMenu) &&
-                    "none",
-                }}
-                id={`Download ${labelWord[0].toLowerCase()}List`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.downloadList(labelWord);
-                }}
-                className={`${styles.littleButton} ${
-                  labelWord === "Yes" ? styles.yListButton : styles.nListButton
-                }`}
-              >
-                Download {labelWord}
-              </button>
+              <div className={styles.copyAndDLButtonsHolder}>
+                <button
+                  style={{
+                    pointerEvents:
+                      (this.state.showConfigMenu ||
+                        this.state.showUploadMenu) &&
+                      "none",
+                  }}
+                  id={`Download ${labelWord[0].toLowerCase()}List`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.copyList(labelWord);
+                  }}
+                  className={`${styles.littleHalfButton} ${styles.topslice} ${
+                    labelWord === "Yes"
+                      ? styles.yListButton
+                      : styles.nListButton
+                  }
+                  
+                  
+                  
+                  `}
+                >
+                  Copy {labelWord}
+                </button>
+
+                <button
+                  style={{
+                    pointerEvents:
+                      (this.state.showConfigMenu ||
+                        this.state.showUploadMenu) &&
+                      "none",
+                  }}
+                  id={`Download ${labelWord[0].toLowerCase()}List`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.downloadList(labelWord);
+                  }}
+                  className={`${styles.littleHalfButton} ${
+                    styles.bottomslice
+                  } ${
+                    labelWord === "Yes"
+                      ? styles.yListButton
+                      : styles.nListButton
+                  }`}
+                >
+                  Download {labelWord}
+                </button>
+              </div>
             );
           })}
 

@@ -52,3 +52,9 @@
   /* margin-right: -387.5px;
   margin-top: -270px; */
 }
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .textareaHolder {
+    width: 100%;
+  }
+}

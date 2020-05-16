@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styles from "./css/ConfigMenu.module.css";
+import brokenclippy from "./images/brokenclippy.png";
 import clippy0 from "./images/clippy0.png";
 import clippy1 from "./images/clippy1.png";
 import clippy2 from "./images/clippy2.png";
@@ -9,6 +10,7 @@ import { configText } from "./utils.js";
 
 class ConfigMenu extends Component {
   state = {
+    forceBrokenClippy: false, //dev switch
     clippy: [clippy0, clippy1, clippy2, clippy3, clippy4],
     configIterator: 0,
     cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox: "75px",
@@ -123,8 +125,12 @@ class ConfigMenu extends Component {
           <div className={styles.configOptionsHolder}>
             <img
               className={styles.clippy}
-              src={this.state.clippy[this.props.configLang]}
-              alt="paperclip cartoon character"
+              src={
+                this.state.forceBrokenClippy
+                  ? brokenclippy
+                  : this.state.clippy[this.props.configLang]
+              }
+              alt="paperclip cartoon"
             />
             <div className={styles.configTextHolder}>
               <p className={styles.configText}>

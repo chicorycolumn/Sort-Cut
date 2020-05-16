@@ -41,6 +41,9 @@
 }
 
 .clippy {
+  display: block;
+  max-width: 12.5%;
+  font-size: 14px;
   height: 80%;
   margin: 5%;
   margin-left: 7%;

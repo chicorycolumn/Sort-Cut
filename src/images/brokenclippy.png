@@ -1,0 +1,35 @@
+DONE 0. Allow user to enter custom separators.
+
+DONE 1. Resolve enter key screwing with config menu.
+
+DONE 2. Make Undo function decrement this.state.i.
+
+DONE 3. Undo increases size of wordlist, why?
+
+DONE 4. Stop incrementing i once end of list is reached. Change color of wordbox to darker grey, say.
+
+DONE 5. Hook upload fxn to uploading in a text file.
+
+DONE 6. Hook download fxns to download results.
+
+DONE 7. Make text size shrink to allow larger text, or overflow auto, to bigbox.
+
+DONE 8. Resolve \\ or \ in manual sep input.
+
+DONE 9. Make yes no undo all unclickable during config.
+
+DONE 10. Safeguard against quote mark danger in user sep input.
+
+DONE 11. Hook App's separator variable to be the same as lower.
+
+DONE 12. Check browser resizing on all the various buttons.
+
+DONE 13. Wipe file, raw, separator, whenever open the upload menu.
+
+14. Sort out backslashes in output's separator.
+
+15. It's unpredictable when separating will work. Is the separator always being reset as it should? Thinking in the upload menu with all the various buttons.
+
+DONE 16. Add select all buttons to the two lists.
+
+DONE 17. Add phone option.

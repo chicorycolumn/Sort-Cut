@@ -7,10 +7,13 @@ import UploadMenu from "./UploadMenu.jsx";
 
 class App extends Component {
   state = {
+    whichListToMakeFlashRightNow: null,
     invisibleTextarea: "",
     showConfigMenu: false,
     showUploadMenu: false,
+    fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
     paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px", // Deliberately 0.5 and not 0, as the 0.5 is unique to mounting, so can avoid endless loop in CDU for overflown check.
+    colorOfBigtextBasedAsOverflowcheckFudge: "black",
     separator: "-",
     weAreFinished: false,
     configLang: 0,
@@ -116,7 +119,9 @@ class App extends Component {
     }
 
     if (prevState.i !== this.state.i) {
-      this.isOverflown(document.getElementById(`bigText${this.state.i}`));
+      let el = document.getElementById(`bigText${this.state.i}`);
+
+      this.isOverflown(el);
 
       this.setState({
         weAreFinished: this.state.i > this.state.list.wordlistBackup.length,
@@ -206,6 +211,7 @@ class App extends Component {
     /* Get the text field */
 
     this.setState({
+      whichListToMakeFlashRightNow: labelWord.toLowerCase()[0],
       invisibleTextarea: this.state.list[
         `${labelWord.toLowerCase()[0]}List`
       ].slice(0),
@@ -302,13 +308,41 @@ class App extends Component {
   };
 
   isOverflown = (element) => {
+    const isOverflownInnerFxn = (element) => {
+      if (
+        element.scrollHeight > element.clientHeight ||
+        element.scrollWidth > element.clientWidth
+      ) {
+        console.log("overflowing");
+        this.setState({
+          paddingOfBigtextboxBasedOnWhetherOverflowing: "21.5px",
+          fontsizeOfBigtextBasedOnWhetherOverflowing: "5.35vh",
+          colorOfBigtextBasedAsOverflowcheckFudge: "black",
+        });
+      } else {
+        console.log("not overflowing");
+        this.setState({
+          paddingOfBigtextboxBasedOnWhetherOverflowing: "0px",
+          fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
+          colorOfBigtextBasedAsOverflowcheckFudge: "black",
+        });
+      }
+    };
+
     if (
-      element.scrollHeight > element.clientHeight ||
-      element.scrollWidth > element.clientWidth
+      this.state.list.wordlist[this.state.i - 1] &&
+      this.state.list.wordlist[this.state.i - 1].length > 9
     ) {
-      this.setState({ paddingOfBigtextboxBasedOnWhetherOverflowing: "27.5px" });
+      this.setState({
+        paddingOfBigtextboxBasedOnWhetherOverflowing: "0px",
+        fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
+        colorOfBigtextBasedAsOverflowcheckFudge: "#fbfbfb", //var(--off-white)
+      });
+      setTimeout(() => {
+        isOverflownInnerFxn(element);
+      }, 1);
     } else {
-      this.setState({ paddingOfBigtextboxBasedOnWhetherOverflowing: "0px" });
+      isOverflownInnerFxn(element);
     }
   };
 
@@ -352,6 +386,12 @@ class App extends Component {
   };
 
   render() {
+    if (this.state.whichListToMakeFlashRightNow) {
+      setTimeout(() => {
+        this.setState({ whichListToMakeFlashRightNow: false });
+      }, 4000);
+    }
+
     return (
       <div id="grossuberbox" className={styles.grossuberbox}>
         {/* <a href={words} target="_blank" rel="noopener noreferrer">
@@ -440,6 +480,9 @@ class App extends Component {
                 style={{
                   paddingTop: this.state
                     .paddingOfBigtextboxBasedOnWhetherOverflowing,
+                  fontSize: this.state
+                    .fontsizeOfBigtextBasedOnWhetherOverflowing,
+                  color: this.state.colorOfBigtextBasedAsOverflowcheckFudge,
                 }}
                 className={styles.bigText}
                 id={`bigText${this.state.i}`}
@@ -484,9 +527,15 @@ class App extends Component {
                 <div
                   id={`${label}List`}
                   key={`${label}List`}
-                  className={`${styles.list} ${
-                    label === "y" ? styles.yList : styles.nList
-                  }`}
+                  className={`${styles.list} 
+                  
+                  
+                  ${
+                    this.state.whichListToMakeFlashRightNow === label &&
+                    (label === "y" ? styles.flashingY : styles.flashingN)
+                  }
+                  
+                  ${label === "y" ? styles.yList : styles.nList}`}
                 >
                   {this.state.list[`${label}List`].map((word) => (
                     <p

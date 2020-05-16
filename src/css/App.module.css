@@ -5,7 +5,9 @@
   --yList: lightgreen;
   --nList: #ff9999;
   --yList2: #bdf5bd;
+  --yList2Lighter: #d3f8d3;
   --nList2: #ffcccc;
+  --off-white: #fbfbfb;
 }
 
 .App {
@@ -46,7 +48,7 @@
 }
 
 .bigwordbox {
-  background-color: #fbfbfb;
+  background-color: var(--off-white);
   height: 32.5%;
   text-align: center;
   display: flex;
@@ -263,6 +265,40 @@
 .bottomslice {
   border-radius: 0px 0px 10px 10px;
   box-shadow: 1px 1.5px 5px black;
+}
+
+@keyframes shimmerY {
+  0% {
+    background-color: var(--yList);
+  }
+  30% {
+    background-color: var(--yList2Lighter);
+  }
+  100% {
+    background-color: var(--yList);
+  }
+}
+
+.flashingY {
+  animation-name: shimmerY;
+  animation-duration: 1.5s;
+}
+
+@keyframes shimmerN {
+  0% {
+    background-color: var(--nList);
+  }
+  30% {
+    background-color: var(--nList2);
+  }
+  100% {
+    background-color: var(--nList);
+  }
+}
+
+.flashingN {
+  animation-name: shimmerN;
+  animation-duration: 1.5s;
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {

@@ -57,7 +57,7 @@
 }
 
 .bigtextbox {
-  padding: 0px 5px 0px 5px;
+  padding: 0px 5% 0px 5%;
   display: flex;
   height: 100%;
   flex-direction: column;
@@ -176,6 +176,8 @@
 
 .uButton {
   z-index: 2;
+  background-color: white;
+  font-size: 16px;
 }
 
 .littleButtonsContainer {
@@ -191,6 +193,7 @@
 
 .configButton {
   background-color: white;
+  font-size: 16px;
 }
 
 .tinyButtonHolder {
@@ -302,12 +305,6 @@
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
-  .configButton {
-    pointer-events: none;
-    background-color: lightgray;
-    color: darkgray;
-  }
-
   :root {
     --main-width: 90%;
     --min-width: 0px;

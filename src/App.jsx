@@ -7,6 +7,8 @@ import UploadMenu from "./UploadMenu.jsx";
 
 class App extends Component {
   state = {
+    userIsOnMobile: false,
+    mobileListEditingMode: false,
     whichListToMakeFlashRightNow: null,
     invisibleTextarea: "",
     showConfigMenu: false,
@@ -14,7 +16,7 @@ class App extends Component {
     fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
     paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px", // Deliberately 0.5 and not 0, as the 0.5 is unique to mounting, so can avoid endless loop in CDU for overflown check.
     colorOfBigtextBasedAsOverflowcheckFudge: "black",
-    separator: "-",
+    separator: "\t",
     weAreFinished: false,
     configLang: 0,
     i: 1,
@@ -69,6 +71,8 @@ class App extends Component {
   };
 
   componentDidMount() {
+    this.setState({ userIsOnMobile: window.screen.width <= 568 });
+
     // let observer = new MutationObserver(function (mutations) {
     //   mutations.forEach(function (mutationRecord) {
     //     console.log("style changed!");
@@ -92,10 +96,30 @@ class App extends Component {
 
       return newState;
     });
-    this.keepListening();
+    setTimeout(this.keepListening, 50);
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (prevState.showUploadMenu && !this.state.showUploadMenu) {
+      this.keepListening();
+      this.wipeAppState();
+      console.log("Let's play!");
+      this.setState((currState) => {
+        let newState = { list: {} };
+        newState.list.yList = [];
+        newState.list.nList = [];
+        newState.list.wordlist = currState.list.wordlist.filter(
+          (x) => x !== ""
+        );
+        newState.list.wordlistBackup = currState.list.wordlist.filter(
+          (x) => x !== ""
+        );
+
+        return { newState };
+      });
+
+      this.isOverflown(document.getElementById(`bigText${this.state.i}`));
+    }
     if (!prevState.showUploadMenu && this.state.showUploadMenu) {
       document.onkeyup = function (event) {};
     }
@@ -104,10 +128,6 @@ class App extends Component {
     }
     if (prevState.weAreFinished && !this.state.weAreFinished) {
       this.keepListening();
-    }
-    if (prevState.showUploadMenu && !this.state.showUploadMenu) {
-      this.keepListening();
-      this.wipeAppState();
     }
 
     if (
@@ -149,12 +169,19 @@ class App extends Component {
   };
 
   keepListening = (shouldIOnlyAllowPressOfUndoButton) => {
-    let { showConfigMenu, triggers, showUploadMenu } = this.state;
+    let {
+      showConfigMenu,
+      triggers,
+      showUploadMenu,
+      userIsOnMobile,
+    } = this.state;
     let pressButtonColor = this.pressButtonColor;
 
     document.onkeyup = function (event) {
       event.preventDefault();
-      if (!(showConfigMenu || showUploadMenu)) {
+      if (!(showConfigMenu || showUploadMenu || userIsOnMobile)) {
+        console.log("in doc on keyup", userIsOnMobile);
+
         let which = event.which;
         let code = event.keyCode;
 
@@ -208,13 +235,11 @@ class App extends Component {
   };
 
   copyList = (labelWord) => {
-    /* Get the text field */
-
     this.setState({
       whichListToMakeFlashRightNow: labelWord.toLowerCase()[0],
-      invisibleTextarea: this.state.list[
-        `${labelWord.toLowerCase()[0]}List`
-      ].slice(0),
+      invisibleTextarea: this.state.list[`${labelWord.toLowerCase()[0]}List`]
+        .slice(0)
+        .join(this.state.separator),
     });
 
     setTimeout(() => {
@@ -227,15 +252,45 @@ class App extends Component {
 
   downloadList = (labelWord) => {
     let splitter;
-
     splitter = this.state.separator;
+
+    let arr = splitter.split("");
+
+    console.log("arr", arr);
+    let splittr = "";
+
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] !== "\\") {
+        console.log("a");
+        splittr = splittr.concat(arr[i]);
+      } else {
+        console.log("b");
+
+        if (arr[i + 1] === "t") {
+          splittr = splittr.concat("\t");
+        } else if (arr[i + 1] === "s") {
+          splittr = splittr.concat(" ");
+        } else if (arr[i + 1] === "n") {
+          splittr = splittr.concat("\n");
+        } else {
+          // splittr = splittr.concat(`\\${arr[i + 1]}`);
+
+          splittr = splittr.concat("\\");
+          splittr = splittr.concat(arr[i + 1]);
+        }
+        i++;
+      }
+    }
+
+    console.log(`..${splittr}..`, splittr.length);
     // splitter = new RegExp(this.state.separator);
     // if (this.state.separator.split("").includes("\\")) {
     //   splitter = new RegExp("\\" + this.state.separator[1]);
     // }
+    // splitter = "\n";
     let stringFromWordArray = this.state.list[
       `${labelWord[0].toLowerCase()}List`
-    ].join(splitter);
+    ].join(splittr);
     let myblob = new Blob([stringFromWordArray], {
       type: "text/plain",
     });
@@ -313,14 +368,14 @@ class App extends Component {
         element.scrollHeight > element.clientHeight ||
         element.scrollWidth > element.clientWidth
       ) {
-        console.log("overflowing");
+        console.log("overflown");
         this.setState({
           paddingOfBigtextboxBasedOnWhetherOverflowing: "21.5px",
           fontsizeOfBigtextBasedOnWhetherOverflowing: "5.35vh",
           colorOfBigtextBasedAsOverflowcheckFudge: "black",
         });
       } else {
-        console.log("not overflowing");
+        console.log("not overflown");
         this.setState({
           paddingOfBigtextboxBasedOnWhetherOverflowing: "0px",
           fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
@@ -525,6 +580,16 @@ class App extends Component {
             {["y", "n"].map((label) => {
               return (
                 <div
+                  onClick={(e) => {
+                    e.preventDefault();
+
+                    if (
+                      this.state.userIsOnMobile &&
+                      !this.state.mobileListEditingMode
+                    ) {
+                      this.putWordInList(label);
+                    }
+                  }}
                   id={`${label}List`}
                   key={`${label}List`}
                   className={`${styles.list} 
@@ -563,21 +628,45 @@ class App extends Component {
           </div>
         </div>
         <div className={styles.littleButtonsContainer}>
-          <button
-            style={{
-              pointerEvents:
-                (this.state.showConfigMenu || this.state.showUploadMenu) &&
-                "none",
-            }}
-            id="Show Config"
-            onClick={(e) => {
-              e.preventDefault();
-              this.showConfigMenu();
-            }}
-            className={`${styles.littleButton} ${styles.configButton}`}
-          >
-            Set keys
-          </button>
+          {this.state.userIsOnMobile ? (
+            <button
+              style={{
+                backgroundColor: this.state.mobileListEditingMode && "#ccffff",
+
+                pointerEvents:
+                  (this.state.showConfigMenu || this.state.showUploadMenu) &&
+                  "none",
+              }}
+              id="Edit Lists"
+              onClick={(e) => {
+                e.preventDefault();
+                this.setState((currState) => {
+                  return {
+                    mobileListEditingMode: !currState.mobileListEditingMode,
+                  };
+                });
+              }}
+              className={`${styles.littleButton} ${styles.configButton}`}
+            >
+              {this.state.mobileListEditingMode ? "Stop editing" : "Edit lists"}
+            </button>
+          ) : (
+            <button
+              style={{
+                pointerEvents:
+                  (this.state.showConfigMenu || this.state.showUploadMenu) &&
+                  "none",
+              }}
+              id="Show Config"
+              onClick={(e) => {
+                e.preventDefault();
+                this.showConfigMenu();
+              }}
+              className={`${styles.littleButton} ${styles.configButton}`}
+            >
+              Set keys
+            </button>
+          )}
 
           {["Yes", "No"].map((labelWord) => {
             return (

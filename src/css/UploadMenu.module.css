@@ -12,7 +12,7 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .superUploadOptionsHolder {
@@ -103,7 +103,7 @@
   width: 30px;
   height: 30px;
   padding: 0px;
-  left: 5px;
+  left: -2.5px;
   bottom: 8px;
 }
 
@@ -167,7 +167,7 @@
 .sep2 {
   opacity: 1;
   height: 170px;
-  width: 280px;
+  width: 295px;
   position: relative;
   /* align-self: center; */
   /* top: 250px; */
@@ -191,7 +191,7 @@
   margin: 2.5% 0% 2.5% 2.5%;
   font-size: 15.5pt;
   align-self: center;
-  width: 90%;
+  width: 95%;
   position: relative;
   line-height: 30px;
   text-align: center;
@@ -199,7 +199,7 @@
   top: 5px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .sepLeft {
@@ -215,6 +215,8 @@
   line-height: 19px;
   margin: 0;
   margin-left: 15px;
+  position: relative;
+  top: 7.5px;
 }
 
 .littleUploadButton2 {
@@ -222,13 +224,13 @@
   background-color: white;
   border-radius: 5px;
   height: 45px;
-  font-size: 12px;
-  width: 70px;
-  margin: 2.5px 0px 2.5px 0px;
+  font-size: 11.5px;
+  width: 105px;
+  margin: 1px 0px 1px 0px;
 }
 
 .screenshot {
-  top: 5%;
+  top: 4%;
   width: 75%;
   position: relative;
 }
@@ -247,13 +249,13 @@
 
 .fileConfirmationButton {
   height: 60px;
-  width: 320px;
+  width: 80%;
   border-radius: 10px;
   font-size: 15px;
   align-self: center;
   background-color: white;
   position: relative;
-  top: -290px;
+  top: 2.5%;
   background-color: chartreuse;
   white-space: nowrap;
   overflow: hidden;
@@ -284,5 +286,14 @@
 
   .separatorText {
     padding-top: 5px;
+  }
+
+  .sep2 {
+    width: 270px;
+  }
+
+  .sepRight {
+    font-size: 13px;
+    top: -5px;
   }
 }

@@ -6,11 +6,13 @@ const egSeps = [
   { label: "space", char: "\\s" },
   { label: "comma, space", char: ",\\s" },
   { label: "new line", char: "\\n" },
+  { label: "comma, new line", char: ",\\n" },
   { label: "tab", char: "\\t" },
 ];
 
 class UploadMenu extends Component {
   state = {
+    unformattedTextFile: null,
     cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox: "80px",
     showFileConfirmation: false,
     newStateForApp: null,
@@ -21,20 +23,45 @@ class UploadMenu extends Component {
     rawInput: "",
   };
 
-  submitText = () => {
-    this.props.setAppState(this.state.newStateForApp);
-  };
-
   changeUploadMenuState = (newState) => {
     this.setState(newState);
   };
 
   formatRawInput = (string) => {
     let splitter = new RegExp(this.state.separator.char);
-    if (this.state.separator.char.split("").includes("\\")) {
-      splitter = new RegExp("\\" + this.state.separator.char[1]);
+
+    let arr = this.state.separator.char.split("");
+
+    console.log("arr", arr);
+    let splittr = "";
+
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] !== "\\") {
+        console.log("a");
+        splittr = splittr.concat(arr[i]);
+      } else {
+        console.log("b");
+
+        if (arr[i + 1] === "t") {
+          splittr = splittr.concat("\t");
+        } else if (arr[i + 1] === "s") {
+          splittr = splittr.concat(" ");
+        } else if (arr[i + 1] === "n") {
+          splittr = splittr.concat("\n");
+        } else {
+          // splittr = splittr.concat(`\\${arr[i + 1]}`);
+
+          splittr = splittr.concat("\\");
+          splittr = splittr.concat(arr[i + 1]);
+        }
+        i++;
+      }
     }
-    let array = string.split(splitter);
+
+    // if (this.state.separator.char.split("").includes("\\")) {
+    //   splitter = new RegExp("\\" + this.state.separator.char[1]);
+    // }
+    let array = string.split(splittr);
     return array;
   };
 
@@ -71,11 +98,7 @@ class UploadMenu extends Component {
 
     newStateForApp.showUploadMenu = false;
 
-    this.setState({ newStateForApp });
-
-    if (!this.state.filename.length) {
-      this.props.setAppState(newStateForApp);
-    }
+    this.props.setAppState(newStateForApp);
   };
 
   uploadText = () => {
@@ -120,6 +143,8 @@ class UploadMenu extends Component {
   };
 
   render() {
+    console.log(this.state.filename, "this.state.filename");
+    console.log(`Uploadsep..${this.state.separator.char}..`);
     return (
       <div
         id="uploadMenuHolder"
@@ -178,7 +203,7 @@ class UploadMenu extends Component {
                     });
 
                     this.uploadText().then((text) => {
-                      this.gobbleInput(text);
+                      this.setState({ unformattedTextFile: text });
                     });
                   }}
                 >
@@ -191,6 +216,7 @@ class UploadMenu extends Component {
                       e.preventDefault();
 
                       if (this.checkForBackslash()) {
+                        this.setState({ unformattedTextFile: null });
                         this.gobbleInput();
                       }
                     }}
@@ -269,7 +295,7 @@ class UploadMenu extends Component {
                     <p className={styles.sepRightInstructions}>
                       {" "}
                       Type the character(s) that separate each item in your .txt
-                      file, or in the list you will manually paste.
+                      file, or pasted list.
                     </p>
                     <input
                       className={styles.sepRightInput}
@@ -315,7 +341,7 @@ class UploadMenu extends Component {
             onClick={(e) => {
               e.preventDefault();
               if (this.checkForBackslash()) {
-                this.submitText();
+                this.gobbleInput(this.state.unformattedTextFile);
               }
             }}
           >

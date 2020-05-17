@@ -1,9 +1,9 @@
 {
-  "short_name": "Does It Please You?",
-  "name": "Does It Please You?",
+  "short_name": "Sort Cut",
+  "name": "Sort Cut",
   "icons": [
     {
-      "src": "favicon_dblock.ico",
+      "src": "sword_favicon_25px.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }

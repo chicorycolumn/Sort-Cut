@@ -73,18 +73,6 @@ class App extends Component {
 
   componentDidMount() {
     this.setState({ userIsOnMobile: window.screen.width <= 568 });
-
-    // let observer = new MutationObserver(function (mutations) {
-    //   mutations.forEach(function (mutationRecord) {
-    //     console.log("style changed!");
-    //   });
-    // });
-
-    // observer.observe(bwb, {
-    //   attributes: true,
-    //   attributeFilter: [rect.top, rect.right, rect.bottom, rect.left],
-    // });
-
     this.setState((currState) => {
       let newState = { colors: currState.colors };
       Object.keys(newState.colors.display).forEach((key) => {
@@ -104,7 +92,6 @@ class App extends Component {
     if (prevState.showUploadMenu && !this.state.showUploadMenu) {
       this.keepListening();
       this.wipeAppState();
-      console.log("Let's play!");
       this.setState((currState) => {
         let newState = { list: {} };
         newState.list.yList = [];
@@ -181,11 +168,8 @@ class App extends Component {
     document.onkeyup = function (event) {
       event.preventDefault();
       if (!(showConfigMenu || showUploadMenu || userIsOnMobile)) {
-        console.log("in doc on keyup", userIsOnMobile);
-
         let which = event.which;
         let code = event.keyCode;
-
         Object.keys(triggers.current).forEach((label) => {
           if (
             which === triggers.current[label].which ||
@@ -252,21 +236,13 @@ class App extends Component {
   };
 
   formatSeparatorFromState = () => {
-    let splitter;
-    splitter = this.state.separator;
-
-    let arr = splitter.split("");
-
-    console.log("arr", arr);
+    let arr = this.state.separator.split("");
     let splittr = "";
 
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] !== "\\") {
-        console.log("a");
         splittr = splittr.concat(arr[i]);
       } else {
-        console.log("b");
-
         if (arr[i + 1] === "t") {
           splittr = splittr.concat("\t");
         } else if (arr[i + 1] === "s") {
@@ -274,8 +250,6 @@ class App extends Component {
         } else if (arr[i + 1] === "n") {
           splittr = splittr.concat("\n");
         } else {
-          // splittr = splittr.concat(`\\${arr[i + 1]}`);
-
           splittr = splittr.concat("\\");
           splittr = splittr.concat(arr[i + 1]);
         }
@@ -286,12 +260,6 @@ class App extends Component {
   };
 
   downloadList = (labelWord) => {
-    // console.log(`..${splittr}..`, splittr.length);
-    // splitter = new RegExp(this.state.separator);
-    // if (this.state.separator.split("").includes("\\")) {
-    //   splitter = new RegExp("\\" + this.state.separator[1]);
-    // }
-    // splitter = "\n";
     let stringFromWordArray = this.state.list[
       `${labelWord[0].toLowerCase()}List`
     ].join(this.formatSeparatorFromState());
@@ -314,7 +282,6 @@ class App extends Component {
     while (random === this.state.configLang) {
       random = Math.floor(Math.random() * 3); //SCREW
     }
-    // this.checkCoordinatesOfBigwordboxAndAdjustMenuAccordingly();
 
     this.setState({
       showConfigMenu: true,
@@ -328,15 +295,6 @@ class App extends Component {
       element.scrollTop = element.scrollHeight;
     }, 50);
   };
-
-  // checkCoordinatesOfBigwordboxAndAdjustMenuAccordingly = () => {
-  //   let bwb = document.getElementById("bigwordbox");
-  //   var rect = bwb.getBoundingClientRect();
-  //   console.log(
-  //     "bigwordbox",
-  //     `top:${Math.round(rect.top)}, bottom:${Math.round(rect.bottom)}`
-  //   );
-  // };
 
   undo = () => {
     let { word, destination, origin } = this.state.mostRecentAction;
@@ -360,9 +318,6 @@ class App extends Component {
       if (origin === "yList" || origin === "nList") {
         this.updateScroll(origin);
       }
-      // if (destination === "yList" || destination === "nList") {
-      //   this.updateScroll(destination);
-      // }
     }
   };
 
@@ -372,14 +327,12 @@ class App extends Component {
         element.scrollHeight > element.clientHeight ||
         element.scrollWidth > element.clientWidth
       ) {
-        console.log("overflown");
         this.setState({
           paddingOfBigtextboxBasedOnWhetherOverflowing: "21.5px",
           fontsizeOfBigtextBasedOnWhetherOverflowing: "5.35vh",
           colorOfBigtextBasedAsOverflowcheckFudge: "black",
         });
       } else {
-        console.log("not overflown");
         this.setState({
           paddingOfBigtextboxBasedOnWhetherOverflowing: "0px",
           fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
@@ -453,11 +406,8 @@ class App extends Component {
 
     return (
       <div id="grossuberbox" className={styles.grossuberbox}>
-        {/* <a href={words} target="_blank" rel="noopener noreferrer">
-          Visit W3Schools.com!
-        </a> */}
-
         <textarea
+          readOnly
           value={this.state.invisibleTextarea}
           className={styles.invisibleTextarea}
           id="invisibleTextarea"
@@ -500,7 +450,6 @@ class App extends Component {
                 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  // this.checkCoordinatesOfBigwordboxAndAdjustMenuAccordingly();
                   this.setState({ showUploadMenu: true });
                 }}
                 id="Upload List"
@@ -610,9 +559,9 @@ class App extends Component {
                   {this.state.list[`${label}List`].map((word) => (
                     <p
                       style={{
-                        color: this.state.mobileListEditingMode
-                          ? this.state.hoverColor[label]
-                          : "black",
+                        color:
+                          this.state.mobileListEditingMode &&
+                          this.state.hoverColor[label],
                       }}
                       id={`${word}-${(Math.random() * 1000)
                         .toString()
@@ -680,7 +629,10 @@ class App extends Component {
 
           {["Yes", "No"].map((labelWord) => {
             return (
-              <div className={styles.copyAndDLButtonsHolder}>
+              <div
+                key={`Download And Copy ${labelWord[0].toLowerCase()}Holder`}
+                className={styles.copyAndDLButtonsHolder}
+              >
                 <button
                   style={{
                     pointerEvents:
@@ -688,7 +640,8 @@ class App extends Component {
                         this.state.showUploadMenu) &&
                       "none",
                   }}
-                  id={`Download ${labelWord[0].toLowerCase()}List`}
+                  key={`Copy ${labelWord[0].toLowerCase()}List`}
+                  id={`Copy ${labelWord[0].toLowerCase()}List`}
                   onClick={(e) => {
                     e.preventDefault();
                     this.copyList(labelWord);
@@ -713,6 +666,7 @@ class App extends Component {
                         this.state.showUploadMenu) &&
                       "none",
                   }}
+                  key={`Download ${labelWord[0].toLowerCase()}List`}
                   id={`Download ${labelWord[0].toLowerCase()}List`}
                   onClick={(e) => {
                     e.preventDefault();

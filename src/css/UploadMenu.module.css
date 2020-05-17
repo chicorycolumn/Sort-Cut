@@ -1,5 +1,4 @@
 .uploadMenuHolder {
-  /* background-color: white; */
   top: 80px;
   align-self: center;
   align-items: center;
@@ -126,7 +125,6 @@
 }
 
 .left {
-  /* border: black dotted 1pt; */
 }
 
 .right {
@@ -146,7 +144,6 @@
 }
 
 .sep1 {
-  /* background-color: blue; */
   top: 15px;
   align-self: center;
   align-items: center;
@@ -154,9 +151,6 @@
   justify-self: center;
   justify-items: center;
   justify-content: center;
-  /* width: 100%;
-  height: 100%; */
-  /* top: 200px; */
   height: 350px;
   position: relative;
   display: flex;
@@ -169,8 +163,6 @@
   height: 170px;
   width: 295px;
   position: relative;
-  /* align-self: center; */
-  /* top: 250px; */
   z-index: 2;
   background-color: whitesmoke;
   border-radius: 10pt;
@@ -203,13 +195,11 @@
 }
 
 .sepLeft {
-  /* border: black dotted 2pt; */
   display: flex;
   flex-direction: column;
 }
 
 .sepRight {
-  /* border: blue dotted 2pt; */
   width: 100%;
   font-size: 15px;
   line-height: 19px;
@@ -220,7 +210,6 @@
 }
 
 .littleUploadButton2 {
-  /* margin: 0; */
   background-color: white;
   border-radius: 5px;
   height: 45px;
@@ -244,7 +233,6 @@
 
 .sepRightInstructions {
   margin: 10px 0px 10px 0px;
-  /* margin-right: 0; */
 }
 
 .fileConfirmationButton {

@@ -28,20 +28,13 @@ class UploadMenu extends Component {
   };
 
   formatRawInput = (string) => {
-    let splitter = new RegExp(this.state.separator.char);
-
     let arr = this.state.separator.char.split("");
-
-    console.log("arr", arr);
     let splittr = "";
 
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] !== "\\") {
-        console.log("a");
         splittr = splittr.concat(arr[i]);
       } else {
-        console.log("b");
-
         if (arr[i + 1] === "t") {
           splittr = splittr.concat("\t");
         } else if (arr[i + 1] === "s") {
@@ -49,18 +42,12 @@ class UploadMenu extends Component {
         } else if (arr[i + 1] === "n") {
           splittr = splittr.concat("\n");
         } else {
-          // splittr = splittr.concat(`\\${arr[i + 1]}`);
-
           splittr = splittr.concat("\\");
           splittr = splittr.concat(arr[i + 1]);
         }
         i++;
       }
     }
-
-    // if (this.state.separator.char.split("").includes("\\")) {
-    //   splitter = new RegExp("\\" + this.state.separator.char[1]);
-    // }
     let array = string.split(splittr);
     return array;
   };
@@ -143,8 +130,6 @@ class UploadMenu extends Component {
   };
 
   render() {
-    console.log(this.state.filename, "this.state.filename");
-    console.log(`Uploadsep..${this.state.separator.char}..`);
     return (
       <div
         id="uploadMenuHolder"

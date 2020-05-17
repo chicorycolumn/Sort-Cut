@@ -1,5 +1,4 @@
 .one {
-  /* background-color: blue; */
   align-self: center;
   align-items: center;
   align-content: center;
@@ -14,7 +13,6 @@
 }
 
 .textareaHolder {
-  /* border: yellow dotted 2pt; */
   top: 260px;
   box-sizing: border-box;
   opacity: 1;

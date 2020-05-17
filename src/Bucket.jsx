@@ -9,10 +9,8 @@ class Bucket extends Component {
   componentDidMount() {
     let el = document.getElementById("uploadMenuHolder");
     var rect = el.getBoundingClientRect();
-    console.log(rect.top);
     this.setState({
       cssTopPropertyOfTextareaBasedOnRectTopOfBigwordbox: `${rect.top + 180}px`,
-      // cssMarginTopPropertyOfXBasedOnRectTopOfBigwordbox: `${rect.top - 270}px`,
     });
   }
 
@@ -34,10 +32,6 @@ class Bucket extends Component {
             }}
           ></textarea>
           <button
-            // style={{
-            //   marginTop: this.state
-            //     .cssMarginTopPropertyOfXBasedOnRectTopOfBigwordbox,
-            // }}
             id="Quit Bucket"
             onClick={(e) => {
               e.preventDefault();

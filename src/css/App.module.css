@@ -8,8 +8,8 @@
   --yList2Lighter: #d3f8d3;
   --nList2: #ffcccc;
   --off-white: #fbfbfb;
-  --n-hover: chartreuse;
-  --y-hover: #e60000;
+  --y-hover: chartreuse;
+  --n-hover: #e60000;
 }
 
 .App {
@@ -23,7 +23,6 @@
   flex-direction: column;
   justify-content: center;
   height: 100vh;
-  /* border: black dotted 5pt; */
 }
 
 .invisibleTextarea {
@@ -37,7 +36,6 @@
 }
 
 .uberbox {
-  /* border: black solid 2pt; */
   border-radius: 20px;
   box-shadow: 1.5px 1.5px 10px black;
   overflow: hidden;
@@ -46,7 +44,6 @@
   max-width: var(--max-width);
   align-self: center;
   height: 80%;
-  /* height: 90%; */
 }
 
 .bigwordbox {
@@ -85,7 +82,6 @@
 }
 
 .buttonbox {
-  /* background-color: bisque; */
   height: 10%;
 }
 
@@ -113,16 +109,13 @@
   height: 58%;
   display: flex;
   flex-direction: row;
-  /* border: blue dotted 1pt; */
 }
 
 .list {
   padding: 0px 5px 0px 5px;
-  /* height: 100%; */
   width: 50%;
   text-align: center;
   font-size: 19px;
-  /* font-size: 40px; */
   overflow-y: auto;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -134,7 +127,6 @@
 
 .yList {
   background-color: var(--yList);
-  /* box-shadow: 5px 0px 5px black; */
   border-right: rgba(0, 0, 0, 0.3) solid 0.5pt;
 }
 
@@ -167,7 +159,6 @@
   border-radius: 10px;
   font-size: 13px;
   border: none;
-  /* border: black solid 0.5px; */
   box-shadow: 1px 1px 5px black;
 }
 
@@ -204,7 +195,6 @@
 .tinyButtonHolder {
   margin: 0;
   height: 20%;
-  /* background-color: darkorange; */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -255,7 +245,6 @@
   width: 100px;
   font-size: 13px;
   border: none;
-  /* border: black solid 0.5px; */
 }
 
 .copyAndDLButtonsHolder {

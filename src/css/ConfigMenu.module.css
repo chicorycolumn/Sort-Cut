@@ -6,7 +6,7 @@
   align-self: center;
   top: 55px;
   z-index: 2;
-  background-color: yellow;
+  background-color: lightgoldenrodyellow;
   border-radius: 10pt;
   display: flex;
   flex-direction: row;
@@ -80,7 +80,6 @@
 }
 
 .configMenuHolder {
-  /* background-color: blue; */
   align-self: center;
   align-items: center;
   align-content: center;

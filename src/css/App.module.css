@@ -8,6 +8,8 @@
   --yList2Lighter: #d3f8d3;
   --nList2: #ffcccc;
   --off-white: #fbfbfb;
+  --n-hover: chartreuse;
+  --y-hover: #e60000;
 }
 
 .App {
@@ -132,10 +134,13 @@
 
 .yList {
   background-color: var(--yList);
+  /* box-shadow: 5px 0px 5px black; */
+  border-right: rgba(0, 0, 0, 0.3) solid 0.5pt;
 }
 
 .nList {
   background-color: var(--nList);
+  border-left: rgba(0, 0, 0, 0.3) solid 0.5pt;
 }
 
 .wordinlist {
@@ -143,12 +148,12 @@
 }
 
 .nList .wordinlist:hover {
-  color: chartreuse;
+  color: var(--y-hover);
   cursor: w-resize;
 }
 
 .yList .wordinlist:hover {
-  color: #e60000;
+  color: var(--n-hover);
   cursor: e-resize;
 }
 
@@ -318,7 +323,7 @@
 
   .littleButton {
     width: 70px;
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .littleHalfButton {
@@ -332,5 +337,12 @@
 
   .list {
     font-size: 100%;
+  }
+
+  .listContainer {
+    height: 68%;
+    position: relative;
+    top: -10%;
+    border-top: rgba(0, 0, 0, 0.4) solid 1pt;
   }
 }

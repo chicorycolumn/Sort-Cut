@@ -7,6 +7,7 @@ import UploadMenu from "./UploadMenu.jsx";
 
 class App extends Component {
   state = {
+    hoverColor: { n: "#0000e6", y: "#0000e6" },
     userIsOnMobile: false,
     mobileListEditingMode: false,
     whichListToMakeFlashRightNow: null,
@@ -16,7 +17,7 @@ class App extends Component {
     fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
     paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px", // Deliberately 0.5 and not 0, as the 0.5 is unique to mounting, so can avoid endless loop in CDU for overflown check.
     colorOfBigtextBasedAsOverflowcheckFudge: "black",
-    separator: "\t",
+    separator: "\n",
     weAreFinished: false,
     configLang: 0,
     i: 1,
@@ -239,7 +240,7 @@ class App extends Component {
       whichListToMakeFlashRightNow: labelWord.toLowerCase()[0],
       invisibleTextarea: this.state.list[`${labelWord.toLowerCase()[0]}List`]
         .slice(0)
-        .join(this.state.separator),
+        .join(this.formatSeparatorFromState()),
     });
 
     setTimeout(() => {
@@ -250,7 +251,7 @@ class App extends Component {
     }, 500);
   };
 
-  downloadList = (labelWord) => {
+  formatSeparatorFromState = () => {
     let splitter;
     splitter = this.state.separator;
 
@@ -281,8 +282,11 @@ class App extends Component {
         i++;
       }
     }
+    return splittr;
+  };
 
-    console.log(`..${splittr}..`, splittr.length);
+  downloadList = (labelWord) => {
+    // console.log(`..${splittr}..`, splittr.length);
     // splitter = new RegExp(this.state.separator);
     // if (this.state.separator.split("").includes("\\")) {
     //   splitter = new RegExp("\\" + this.state.separator[1]);
@@ -290,7 +294,7 @@ class App extends Component {
     // splitter = "\n";
     let stringFromWordArray = this.state.list[
       `${labelWord[0].toLowerCase()}List`
-    ].join(splittr);
+    ].join(this.formatSeparatorFromState());
     let myblob = new Blob([stringFromWordArray], {
       type: "text/plain",
     });
@@ -548,33 +552,34 @@ class App extends Component {
           </div>
 
           <div className={styles.buttonbox}>
-            {["y", "n"].map((label) => {
-              return (
-                <button
-                  style={{
-                    backgroundColor: this.state.colors.display[label],
-                    zIndex: this.state.z[label],
-                    pointerEvents:
-                      (this.state.showConfigMenu ||
-                        this.state.showUploadMenu) &&
-                      "none",
-                  }}
-                  id={`${label}Button`}
-                  key={`${label}Button`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    this.putWordInList(label);
-                  }}
-                  className={`${styles.button} ${
-                    label === "y" ? styles.yButton : styles.nButton
-                  }`}
-                >
-                  {`${label.toUpperCase()} ( ${
-                    keys[this.state.triggers.current[label].code] || ""
-                  } )`}
-                </button>
-              );
-            })}
+            {!this.state.userIsOnMobile &&
+              ["y", "n"].map((label) => {
+                return (
+                  <button
+                    style={{
+                      backgroundColor: this.state.colors.display[label],
+                      zIndex: this.state.z[label],
+                      pointerEvents:
+                        (this.state.showConfigMenu ||
+                          this.state.showUploadMenu) &&
+                        "none",
+                    }}
+                    id={`${label}Button`}
+                    key={`${label}Button`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      this.putWordInList(label);
+                    }}
+                    className={`${styles.button} ${
+                      label === "y" ? styles.yButton : styles.nButton
+                    }`}
+                  >
+                    {`${label.toUpperCase()} ( ${
+                      keys[this.state.triggers.current[label].code] || ""
+                    } )`}
+                  </button>
+                );
+              })}
           </div>
           <div className={styles.listContainer}>
             {["y", "n"].map((label) => {
@@ -604,6 +609,11 @@ class App extends Component {
                 >
                   {this.state.list[`${label}List`].map((word) => (
                     <p
+                      style={{
+                        color: this.state.mobileListEditingMode
+                          ? this.state.hoverColor[label]
+                          : "black",
+                      }}
                       id={`${word}-${(Math.random() * 1000)
                         .toString()
                         .slice(0, 3)}`}
@@ -737,7 +747,9 @@ class App extends Component {
             }}
             className={`${styles.littleButton} ${styles.uButton}`}
           >
-            {`Undo ( ${keys[this.state.triggers.current.u.code] || ""} )`}
+            {this.state.userIsOnMobile
+              ? "Undo"
+              : `Undo ( ${keys[this.state.triggers.current.u.code] || ""} )`}
           </button>
         </div>
       </div>

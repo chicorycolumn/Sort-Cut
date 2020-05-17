@@ -23,7 +23,7 @@
   align-self: center;
   /* top: 75px; */
   z-index: 2;
-  background-color: yellow;
+  background-color: var(--menu-yellow);
   border-radius: 10pt;
   display: flex;
   flex-direction: row;
@@ -253,7 +253,7 @@
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
   .superUploadOptionsHolder {
-    background-color: lightgoldenrodyellow;
+    background-color: var(--menu-yellow);
     width: 90%;
   }
 

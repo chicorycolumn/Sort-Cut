@@ -1,7 +1,6 @@
 import styles from "./css/App.module.css";
 import React, { Component } from "react";
 import { keys, animals } from "./utils.js";
-import words from "./words.txt";
 import ConfigMenu from "./ConfigMenu.jsx";
 import UploadMenu from "./UploadMenu.jsx";
 

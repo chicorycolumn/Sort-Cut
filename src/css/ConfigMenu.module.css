@@ -6,7 +6,7 @@
   align-self: center;
   top: 55px;
   z-index: 2;
-  background-color: lightgoldenrodyellow;
+  background-color: var(--menu-yellow);
   border-radius: 10pt;
   display: flex;
   flex-direction: row;

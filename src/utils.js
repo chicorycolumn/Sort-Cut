@@ -133,11 +133,14 @@ export const keys = {
 };
 
 export const animals = [
+  "alligator",
+  "bear",
   // "W",
   // "WW",
   // "WWW",
   // "WWWW",
   // "WWWWW",
+  // "HEY HO LET'S GO to the great graveyard where the worm man lives, oh yes he is a man in the daytime but by night he is a moth and he flies to the light of a bar where he laps up the brown fizz.",
   // "WWWWWW",
   // "WWWWWWW",
   // "WWWWWWWW",
@@ -153,8 +156,6 @@ export const animals = [
   // "Under the grass where the worms live is a cave where only a nomad knows.",
   // "WMWMWMWMWMWMWMWMWMWMWMWMWMWM",
   // "I'm on the road to glory, yes I am.",
-  "alligator",
-  "bear",
   "cat",
   "dog",
   "elephant",

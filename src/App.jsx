@@ -3,9 +3,24 @@ import React, { Component } from "react";
 import { keys, animals } from "./utils.js";
 import ConfigMenu from "./ConfigMenu.jsx";
 import UploadMenu from "./UploadMenu.jsx";
+import GearMenu from "./GearMenu.jsx";
+import HelpMenu from "./HelpMenu.jsx";
+import logo from "./images/sword-vertical-symmetrical-words8.png";
 
 class App extends Component {
   state = {
+    makeListShort: true, //dev switch
+    showHelpMenu: false,
+    showGearMenu: false,
+    eggshellDepressed: "rgb(211, 255, 144)",
+    offWhite: "#fbfbfb",
+    shouldButtonBeActiveClass: {
+      y: false,
+      n: false,
+      u: false,
+    },
+    depressionTimeout: 80,
+    filename: "",
     hoverColor: { n: "#0000e6", y: "#0000e6" },
     userIsOnMobile: false,
     mobileListEditingMode: false,
@@ -78,9 +93,15 @@ class App extends Component {
         newState.colors.display[key] = currState.colors.reference[key];
       });
 
+      let initialList = animals;
+
+      if (this.state.makeListShort) {
+        initialList = animals.slice(0, 3);
+      }
+
       newState.list = currState.list;
-      newState.list.wordlist = animals;
-      newState.list.wordlistBackup = animals;
+      newState.list.wordlist = initialList;
+      newState.list.wordlistBackup = initialList;
 
       return newState;
     });
@@ -88,6 +109,26 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (prevState.showConfigMenu && !this.state.showConfigMenu) {
+      let keepListening = this.keepListening;
+      this.setState({ configureKeys: null });
+      document.onkeyup = function (event) {
+        event.preventDefault();
+        keepListening();
+      };
+    }
+
+    if (this.state.showConfigMenu) {
+      let configureKeys = this.state.configureKeys;
+      let check = this.state.showConfigMenu;
+      if (check) {
+        document.onkeyup = function (event) {
+          event.preventDefault();
+          configureKeys(event, check);
+        };
+      }
+    }
+
     if (prevState.showUploadMenu && !this.state.showUploadMenu) {
       this.keepListening();
       this.wipeAppState();
@@ -134,25 +175,21 @@ class App extends Component {
         weAreFinished: this.state.i > this.state.list.wordlistBackup.length,
       });
     }
-
-    let configureKeys = this.state.configureKeys;
-    if (this.state.showConfigMenu) {
-      document.onkeyup = function (event) {
-        event.preventDefault();
-        configureKeys(event);
-      };
-    }
   }
 
   pressButtonColor = (key) => {
-    let tempState = { colors: this.state.colors };
-    tempState.colors.display[key] = tempState.colors.depressed[key];
-    this.setState(tempState);
+    let depressedState = {
+      shouldButtonBeActiveClass: this.state.shouldButtonBeActiveClass,
+    };
+    depressedState.shouldButtonBeActiveClass[key] = true;
+    this.setState(depressedState);
     setTimeout(() => {
-      let revertingState = { colors: this.state.colors };
-      revertingState.colors.display[key] = this.state.colors.reference[key];
-      this.setState(revertingState);
-    }, 60);
+      let normalState = {
+        shouldButtonBeActiveClass: this.state.shouldButtonBeActiveClass,
+      };
+      normalState.shouldButtonBeActiveClass[key] = false;
+      this.setState(normalState);
+    }, this.state.depressionTimeout);
   };
 
   keepListening = (shouldIOnlyAllowPressOfUndoButton) => {
@@ -268,7 +305,9 @@ class App extends Component {
 
     const url = URL.createObjectURL(myblob);
     const link = document.createElement("a");
-    link.download = `${labelWord}-List-${Date.now()}.txt`;
+    link.download = `${
+      this.state.filename.split(".txt").join("") || "Raw"
+    }-${labelWord}-List-${Date.now()}.txt`;
     link.href = url;
     link.click();
   };
@@ -279,7 +318,7 @@ class App extends Component {
     let random = this.state.configLang;
 
     while (random === this.state.configLang) {
-      random = Math.floor(Math.random() * 3); //SCREW
+      random = Math.floor(Math.random() * 3); //screw
     }
 
     this.setState({
@@ -347,7 +386,7 @@ class App extends Component {
       this.setState({
         paddingOfBigtextboxBasedOnWhetherOverflowing: "0px",
         fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
-        colorOfBigtextBasedAsOverflowcheckFudge: "#fbfbfb", //var(--off-white)
+        colorOfBigtextBasedAsOverflowcheckFudge: this.state.offWhite,
       });
       setTimeout(() => {
         isOverflownInnerFxn(element);
@@ -405,6 +444,8 @@ class App extends Component {
 
     return (
       <div id="grossuberbox" className={styles.grossuberbox}>
+        <div id="background" className={styles.background}></div>
+        <div id="backgroundShroud" className={styles.backgroundShroud}></div>
         <textarea
           readOnly
           value={this.state.invisibleTextarea}
@@ -420,6 +461,22 @@ class App extends Component {
               configLang={this.state.configLang}
               keepListening={this.keepListening}
               setAppState={this.setAppState}
+              showConfigMenu={this.state.showConfigMenu}
+            />
+          </div>
+        )}
+
+        {this.state.showHelpMenu && (
+          <div className={styles.obscurus}>
+            <HelpMenu setAppState={this.setAppState} />
+          </div>
+        )}
+
+        {this.state.showGearMenu && (
+          <div className={styles.obscurus}>
+            <GearMenu
+              setAppState={this.setAppState}
+              userIsOnMobile={this.state.userIsOnMobile}
             />
           </div>
         )}
@@ -435,53 +492,80 @@ class App extends Component {
             id="bigwordbox"
             className={styles.bigwordbox}
             style={{
-              backgroundColor: this.state.weAreFinished && "#eeeeee",
+              backgroundColor: this.state.weAreFinished && this.state.offWhite,
             }}
           >
+            {this.state.weAreFinished && (
+              <div className={styles.logoHolder}>
+                <img className={styles.logo} src={logo} alt="SortCut logo" />
+              </div>
+            )}
             <div className={styles.tinyButtonHolder}>
-              <button
-                style={{
-                  color: this.state.weAreFinished && "black",
-                  fontWeight: this.state.weAreFinished && "550",
-                  pointerEvents:
-                    (this.state.showConfigMenu || this.state.showUploadMenu) &&
-                    "none",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.setState({ showUploadMenu: true });
-                }}
-                id="Upload List"
-                className={`${styles.tinyButton} ${styles.uploadButton}`}
-              >
-                Upload list
-              </button>
+              <div className={styles.tinyButtonHolderInner}>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.setState({ showHelpMenu: true });
+                  }}
+                  className={`${styles.iconButton} ${styles.iconButtonHelp}`}
+                >
+                  ?
+                </button>
+                <button
+                  style={{
+                    color: this.state.weAreFinished && "black",
+                    fontWeight: this.state.weAreFinished && "550",
+                    pointerEvents:
+                      (this.state.showConfigMenu ||
+                        this.state.showUploadMenu) &&
+                      "none",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.setState({ showUploadMenu: true });
+                  }}
+                  id="Upload List"
+                  className={`${styles.tinyButton} ${styles.uploadButton}`}
+                >
+                  Upload a list
+                </button>
+              </div>
 
               <p className={styles.counter}>
                 {this.state.weAreFinished
                   ? `Yes: ${this.state.list.yList.length} - No: ${this.state.list.nList.length}`
                   : `${this.state.i} of ${this.state.list.wordlist.length}`}
               </p>
-
-              <button
-                style={{
-                  color: this.state.weAreFinished && "black",
-                  fontWeight: this.state.weAreFinished && "550",
-                  pointerEvents:
-                    (this.state.showConfigMenu || this.state.showUploadMenu) &&
-                    "none",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.startAgain();
-                }}
-                id="Start Again"
-                className={`${styles.tinyButton} ${styles.startagainButton}`}
-              >
-                Start again
-              </button>
+              <div className={styles.tinyButtonHolderInner}>
+                <button
+                  style={{
+                    color: this.state.weAreFinished && "black",
+                    fontWeight: this.state.weAreFinished && "550",
+                    pointerEvents:
+                      (this.state.showConfigMenu ||
+                        this.state.showUploadMenu) &&
+                      "none",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.startAgain();
+                  }}
+                  id="Start Again"
+                  className={`${styles.tinyButton} ${styles.startagainButton}`}
+                >
+                  Start again
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.setState({ showGearMenu: true });
+                  }}
+                  className={`${styles.iconButton} ${styles.iconButtonGear}`}
+                >
+                  ⚙
+                </button>
+              </div>
             </div>
-
             <div className={styles.bigtextbox}>
               <p
                 style={{
@@ -505,7 +589,6 @@ class App extends Component {
                 return (
                   <button
                     style={{
-                      backgroundColor: this.state.colors.display[label],
                       zIndex: this.state.z[label],
                       pointerEvents:
                         (this.state.showConfigMenu ||
@@ -518,9 +601,37 @@ class App extends Component {
                       e.preventDefault();
                       this.putWordInList(label);
                     }}
-                    className={`${styles.button} ${
+                    className={`
+
+
+                    ${
+                      this.state.shouldButtonBeActiveClass[label] &&
+                      styles.fancyButton_active
+                    } 
+
+                    ${
+                      this.state.shouldButtonBeActiveClass[label] &&
+                      label === "y" &&
+                      styles.yButton_active
+                    } 
+
+                    ${
+                      this.state.shouldButtonBeActiveClass[label] &&
+                      label === "n" &&
+                      styles.nButton_active
+                    } 
+
+                
+
+
+
+                    ${styles.fancyButton}
+                    ${styles.button} ${
                       label === "y" ? styles.yButton : styles.nButton
-                    }`}
+                    }
+                    
+                    
+                    `}
                   >
                     {`${label.toUpperCase()} ( ${
                       keys[this.state.triggers.current[label].code] || ""
@@ -570,10 +681,17 @@ class App extends Component {
                         .slice(0, 3)}`}
                       onClick={(e) => {
                         e.preventDefault();
-                        this.switchToColumn(
-                          `${label === "y" ? "n" : "y"}List`,
-                          word
-                        );
+
+                        if (
+                          !this.state.userIsOnMobile ||
+                          (this.state.userIsOnMobile &&
+                            this.state.mobileListEditingMode)
+                        ) {
+                          this.switchToColumn(
+                            `${label === "y" ? "n" : "y"}List`,
+                            word
+                          );
+                        }
                       }}
                       className={styles.wordinlist}
                     >
@@ -589,7 +707,9 @@ class App extends Component {
           {this.state.userIsOnMobile ? (
             <button
               style={{
-                backgroundColor: this.state.mobileListEditingMode && "#ccffff",
+                backgroundColor:
+                  this.state.mobileListEditingMode &&
+                  this.state.eggshellDepressed,
 
                 pointerEvents:
                   (this.state.showConfigMenu || this.state.showUploadMenu) &&
@@ -604,7 +724,7 @@ class App extends Component {
                   };
                 });
               }}
-              className={`${styles.littleButton} ${styles.configButton}`}
+              className={` ${styles.fancyButton} ${styles.littleButton} ${styles.configButton}`}
             >
               {this.state.mobileListEditingMode ? "Stop editing" : "Edit lists"}
             </button>
@@ -614,13 +734,14 @@ class App extends Component {
                 pointerEvents:
                   (this.state.showConfigMenu || this.state.showUploadMenu) &&
                   "none",
+                zIndex: "0",
               }}
               id="Show Config"
               onClick={(e) => {
                 e.preventDefault();
                 this.showConfigMenu();
               }}
-              className={`${styles.littleButton} ${styles.configButton}`}
+              className={`${styles.fancyButton} ${styles.littleButton} ${styles.configButton}`}
             >
               Set keys
             </button>
@@ -645,7 +766,9 @@ class App extends Component {
                     e.preventDefault();
                     this.copyList(labelWord);
                   }}
-                  className={`${styles.littleHalfButton} ${styles.topslice} ${
+                  className={`${styles.fancyButton} ${
+                    styles.littleHalfButton
+                  } ${styles.topslice} ${
                     labelWord === "Yes"
                       ? styles.yListButton
                       : styles.nListButton
@@ -655,7 +778,7 @@ class App extends Component {
                   
                   `}
                 >
-                  Copy {labelWord}
+                  Copy {labelWord}-List
                 </button>
 
                 <button
@@ -671,15 +794,15 @@ class App extends Component {
                     e.preventDefault();
                     this.downloadList(labelWord);
                   }}
-                  className={`${styles.littleHalfButton} ${
-                    styles.bottomslice
-                  } ${
+                  className={`${styles.fancyButton}
+                  
+                  ${styles.littleHalfButton} ${styles.bottomslice} ${
                     labelWord === "Yes"
                       ? styles.yListButton
                       : styles.nListButton
                   }`}
                 >
-                  Download {labelWord}
+                  Download
                 </button>
               </div>
             );
@@ -688,7 +811,6 @@ class App extends Component {
           <button
             id="uButton"
             style={{
-              backgroundColor: this.state.colors.display.u,
               zIndex: this.state.z.u,
               pointerEvents:
                 (this.state.showConfigMenu || this.state.showUploadMenu) &&
@@ -698,7 +820,15 @@ class App extends Component {
               e.preventDefault();
               this.undo();
             }}
-            className={`${styles.littleButton} ${styles.uButton}`}
+            className={`  ${styles.fancyButton} 
+            
+            ${
+              this.state.shouldButtonBeActiveClass["u"] &&
+              styles.fancyButton_active
+            } 
+            
+            
+            ${styles.littleButton} ${styles.uButton}`}
           >
             {this.state.userIsOnMobile
               ? "Undo"

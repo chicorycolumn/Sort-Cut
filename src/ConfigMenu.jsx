@@ -10,6 +10,7 @@ import { configText } from "./utils.js";
 
 class ConfigMenu extends Component {
   state = {
+    showConfigMenu: null,
     forceBrokenClippy: false, //dev switch
     clippy: [clippy0, clippy1, clippy2, clippy3, clippy4],
     configIterator: 0,
@@ -20,6 +21,7 @@ class ConfigMenu extends Component {
     this.props.setAppState({ configureKeys: this.configureKeys });
     this.setState({
       configIterator: 0,
+      showConfigMenu: true,
     });
     document.getElementById("superConfigOptionsHolder").focus();
 
@@ -53,29 +55,29 @@ class ConfigMenu extends Component {
   quitConfig = () => {
     let { triggers } = this.props;
 
-    let newState = {
+    let newStateForApp = {
       showConfigMenu: false,
       triggers,
       z: { y: 0, n: 0, u: 0 },
     };
-    newState.triggers.current = { y: {}, n: {}, u: {} };
+    newStateForApp.triggers.current = { y: {}, n: {}, u: {} };
 
     Object.keys(triggers.backup).forEach((triggerName) =>
       Object.keys(triggers.backup[triggerName]).forEach((codeType) => {
-        newState.triggers.current[triggerName][codeType] =
+        newStateForApp.triggers.current[triggerName][codeType] =
           triggers.backup[triggerName][codeType];
       })
     );
-    this.props.setAppState(newState);
-    this.setState({ configIterator: 0 });
+
+    this.setState({ configIterator: 0, showConfigMenu: false });
+    this.props.setAppState(newStateForApp);
   };
 
-  configureKeys = (event) => {
+  configureKeys = (event, check) => {
     event.preventDefault();
     let i = this.state.configIterator;
     let which = event.which;
     let code = event.keyCode;
-
     if (i === 0) {
       let newState = {};
       newState.triggers = this.props.triggers;
@@ -141,7 +143,10 @@ class ConfigMenu extends Component {
                   id="Initial OK"
                   onClick={(e) => {
                     e.preventDefault();
-                    this.configureKeys(e);
+
+                    if (this.state.showConfigMenu) {
+                      this.configureKeys(e);
+                    }
                   }}
                   className={`${styles.configOK} ${styles.OKnomargin}`}
                 >

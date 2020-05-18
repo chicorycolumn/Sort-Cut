@@ -62,16 +62,16 @@ class UploadMenu extends Component {
 
   gobbleInput = (txtFile) => {
     let input;
-    let newState = {};
+    let newStateForApp = {};
 
     if (txtFile) {
       input = txtFile;
+      newStateForApp.filename = this.state.filename;
     } else {
-      newState.filename = "";
+      newStateForApp.filename = "";
       input = this.state.rawInput;
     }
 
-    let newStateForApp = {};
     let arrayFromInput = this.formatRawInput(input);
 
     newStateForApp.list = {
@@ -259,6 +259,7 @@ class UploadMenu extends Component {
                     {egSeps.map((sepObj) => {
                       return (
                         <button
+                          key={`${sepObj.label}Button`}
                           onClick={(e) => {
                             this.setState({
                               separator: {
@@ -320,19 +321,21 @@ class UploadMenu extends Component {
             />
           </div>
         )}
-        {this.state.filename.length && (
-          <button
-            className={styles.fileConfirmationButton}
-            onClick={(e) => {
-              e.preventDefault();
-              if (this.checkForBackslash()) {
-                this.gobbleInput(this.state.unformattedTextFile);
-              }
-            }}
-          >
-            Let's go with '{this.state.filename}'
-          </button>
-        )}
+        {this.state.filename.length &&
+          !this.state.showBucket &&
+          !this.state.showSeparatorInput && (
+            <button
+              className={styles.fileConfirmationButton}
+              onClick={(e) => {
+                e.preventDefault();
+                if (this.checkForBackslash()) {
+                  this.gobbleInput(this.state.unformattedTextFile);
+                }
+              }}
+            >
+              Let's go with '{this.state.filename}'
+            </button>
+          )}
       </div>
     );
   }

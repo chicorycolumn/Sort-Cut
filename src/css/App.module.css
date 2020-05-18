@@ -3,14 +3,31 @@
   --min-width: 450px;
   --max-width: 650px;
   --yList: lightgreen;
-  --nList: #ff9999;
   --yList2: #bdf5bd;
   --yList2Lighter: #d3f8d3;
+  --nList: #ff9999;
   --nList2: #ffcccc;
   --off-white: #fbfbfb;
   --y-hover: chartreuse;
   --n-hover: #e60000;
   --menu-yellow: #ffff4d;
+  --yList-darker: #59b300;
+  --nList-darker: #990000;
+  --yList-shadow: #408000;
+  --nList-shadow: #660000;
+  --alpha: rgb(155, 155, 155);
+  --betta: rgb(110, 110, 110);
+  --B-trunk: rgb(80, 80, 80);
+  --B-trunk-darker: rgb(146, 146, 146);
+
+  --B-eggshell: rgb(243, 255, 225);
+  --B-eggshell-depressed: rgb(211, 255, 144);
+
+  /* --B-eggshell: rgb(220, 249, 255);
+  --B-eggshell-depressed: rgb(174, 241, 255); */
+  --trunk-height: 3px;
+  --trunk-height-depressed: 1.5px;
+  --trunk-height-minus-depressed: 1.5px;
 }
 
 .App {
@@ -18,12 +35,56 @@
   height: 100%;
 }
 
+.logoHolder {
+  z-index: 5;
+  position: fixed;
+  align-self: center;
+  justify-self: center;
+  width: 40%;
+  height: 17.5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 35px;
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 100%;
+  z-index: 5;
+  position: absolute;
+  align-self: center;
+  justify-self: center;
+  opacity: 0.035;
+}
+
 .grossuberbox {
-  background-color: rgb(255, 255, 230);
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 100vh;
+  z-index: 0;
+}
+
+.background {
+  background-image: url(../images/tile-apple.png);
+  background-size: 250px;
+  /* background-image: url(../images/tile-starsBW.png); */
+  /* background-size: 500px; */
+  background-repeat: repeat;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: -2;
+}
+
+.backgroundShroud {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(238, 255, 224, 0.9);
+  z-index: -1;
 }
 
 .invisibleTextarea {
@@ -33,7 +94,7 @@
   align-self: center;
   justify-self: center;
   position: fixed;
-  top: 36%;
+  top: 46%;
 }
 
 .uberbox {
@@ -45,6 +106,8 @@
   max-width: var(--max-width);
   align-self: center;
   height: 80%;
+  border: grey solid 1.5pt;
+  background-color: var(--off-white);
 }
 
 .bigwordbox {
@@ -73,7 +136,7 @@
 .bigText {
   font-size: 8.35vh;
   margin: 0;
-  margin-top: -20px;
+  margin-top: -29px;
   word-wrap: break-word;
   overflow-wrap: break-word;
   -webkit-hyphens: auto;
@@ -84,6 +147,7 @@
 
 .buttonbox {
   height: 10%;
+  position: relative;
 }
 
 .button {
@@ -92,18 +156,11 @@
   font-size: 24px;
   position: relative;
   border-radius: 5px;
+  border: none;
 }
 
 .button:hover {
   cursor: pointer;
-}
-
-.yButton {
-  z-index: 2;
-}
-
-.nButton {
-  z-index: 2;
 }
 
 .listContainer {
@@ -113,7 +170,7 @@
 }
 
 .list {
-  padding: 0px 5px 0px 5px;
+  padding: 5px 5px 0px 5px;
   width: 50%;
   text-align: center;
   font-size: 19px;
@@ -154,27 +211,12 @@
   cursor: pointer;
 }
 
-.littleButton {
-  height: 100%;
-  width: 100px;
-  border-radius: 10px;
-  font-size: 13px;
-  border: none;
-  box-shadow: 1px 1px 5px black;
-}
-
-.yListButton {
-  background-color: var(--yList2);
-}
-
 .nListButton {
   background-color: var(--nList2);
 }
 
 .uButton {
   z-index: 2;
-  background-color: white;
-  font-size: 16px;
 }
 
 .littleButtonsContainer {
@@ -190,7 +232,6 @@
 
 .configButton {
   background-color: white;
-  font-size: 16px;
 }
 
 .tinyButtonHolder {
@@ -199,6 +240,36 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  position: relative;
+  top: 2.5px;
+}
+
+.tinyButtonHolderInner {
+  margin: 0;
+  width: auto;
+}
+
+.iconButton {
+  margin: 0;
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  color: #777777;
+  border: none;
+}
+
+.iconButtonHelp {
+  font-size: 16px;
+  margin-left: 2.5px;
+  position: relative;
+  top: -2.5px;
+}
+
+.iconButtonGear {
+  font-size: 20px;
+  margin-right: 2.5px;
 }
 
 .tinyButton {
@@ -206,11 +277,15 @@
   width: 90px;
   background-color: Transparent;
   background-repeat: no-repeat;
-  border: none;
   cursor: pointer;
   overflow: hidden;
   outline: none;
   color: #777777;
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+  position: relative;
+  top: -3px;
 }
 
 .counter {
@@ -218,6 +293,8 @@
   margin-top: 9px;
   color: #777777;
   font-size: 13px;
+  position: relative;
+  top: -3px;
 }
 
 .obscurus {
@@ -244,7 +321,7 @@
 .littleHalfButton {
   height: 50%;
   width: 100px;
-  font-size: 13px;
+  font-size: 12px;
   border: none;
 }
 
@@ -258,11 +335,14 @@
 .topslice {
   border-radius: 10px 10px 0px 0px;
   box-shadow: 1px 1px 5px black;
+  z-index: 0;
 }
 
 .bottomslice {
   border-radius: 0px 0px 10px 10px;
   box-shadow: 1px 1.5px 5px black;
+  border-top: none;
+  z-index: 0;
 }
 
 @keyframes shimmerY {
@@ -299,6 +379,117 @@
   animation-duration: 1.5s;
 }
 
+.littleButton {
+  z-index: 0;
+  display: inline-block;
+  height: 100%;
+  width: 100px;
+  border-radius: 10px;
+  font-size: 17px;
+}
+
+.fancyButton {
+  border: 1.5px solid var(--B-trunk-darker);
+  background-color: var(--B-eggshell);
+  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+  -moz-box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+  box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+}
+
+.fancyButton:active,
+.fancyButton_active {
+  background-color: var(--B-eggshell-depressed);
+  -webkit-box-shadow: 0px 2px 0px var(--B-trunk), 0px 1px 6px rgba(0, 0, 0, 0.4),
+    inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+  -moz-box-shadow: 0px 2px 0px var(--B-trunk), 0px 1px 6px rgba(0, 0, 0, 0.4),
+    inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+  box-shadow: 0px var(--trunk-height-depressed) 0px var(--B-trunk),
+    0px 1px 6px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+  -webkit-transform: translate(0, var(--trunk-height-minus-depressed));
+  -moz-transform: translate(0, var(--trunk-height-minus-depressed));
+  transform: translate(0, var(--trunk-height-minus-depressed));
+  -webkit-transition: all 0.025s ease-in-out;
+  -moz-transition: all 0.05s ease-in-out;
+  transition: all 0.05s ease-in-out;
+}
+
+.yListButton {
+  background-color: var(--yList2);
+}
+
+.nListButton {
+  background-color: var(--nList2);
+}
+
+.yListButton:active {
+  background-color: var(--yList);
+}
+
+.nListButton:active {
+  background-color: var(--nList);
+}
+
+.yButton {
+  z-index: 2;
+  /* box-shadow: 0px 2px 3px var(--yList-shadow); */
+  border: var(--yList-darker) solid 1pt;
+  border-top: var(--yList-darker) solid 2pt;
+  background-color: var(--y-hover);
+  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--yList-shadow),
+    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+  -moz-box-shadow: 0px var(--trunk-height) 0px var(--yList-shadow),
+    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+  box-shadow: 0px var(--trunk-height) 0px var(--yList-shadow),
+    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+}
+
+.yButton:active,
+.yButton_active {
+  background-color: var(--yList-darker);
+}
+
+.nButton {
+  z-index: 2;
+  /* box-shadow: 0px 2px 3px var(--nList-shadow); */
+  border: var(--nList-darker) solid 1pt;
+  border-top: var(--nList-darker) solid 2pt;
+  background-color: var(--n-hover);
+
+  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--nList-shadow),
+    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+  -moz-box-shadow: 0px var(--trunk-height) 0px var(--nList-shadow),
+    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+  box-shadow: 0px var(--trunk-height) 0px var(--nList-shadow),
+    2px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+}
+
+.nButton:active,
+.nButton_active {
+  background-color: var(--nList-darker);
+}
+
 @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
   :root {
     --main-width: 90%;
@@ -306,19 +497,18 @@
     --max-width: 650px;
   }
 
+  .tinyButtonHolder {
+    height: 30%;
+  }
+
   .uberbox {
     position: relative;
     top: 5px;
   }
 
-  .littleButton {
-    width: 70px;
-    font-size: 16px;
-  }
-
   .littleHalfButton {
     width: 70px;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .copyAndDLButtonsHolder {
@@ -327,6 +517,7 @@
 
   .list {
     font-size: 100%;
+    padding-top: 0px;
   }
 
   .listContainer {
@@ -334,5 +525,36 @@
     position: relative;
     top: -10%;
     border-top: rgba(0, 0, 0, 0.4) solid 1pt;
+  }
+
+  :root {
+    --trunk-height: 2px;
+    --trunk-height-depressed: 1px;
+    --trunk-height-minus-depressed: 1px;
+  }
+
+  .nList .wordinlist:hover {
+    color: inherit;
+  }
+
+  .yList .wordinlist:hover {
+    color: inherit;
+  }
+
+  .fancyButton {
+    -webkit-box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+      0px 3px 2.5px rgba(0, 0, 0, 0.4),
+      inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+      inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+    -moz-box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+      0px 3px 2.5px rgba(0, 0, 0, 0.4),
+      inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+      inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
+    box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+      0px 3px 2.5px rgba(0, 0, 0, 0.4),
+      inset 0px 1px 0px rgba(255, 255, 255, 0.3),
+      inset 0px 0px 3px rgba(255, 255, 255, 0.5);
   }
 }

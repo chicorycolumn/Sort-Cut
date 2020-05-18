@@ -65,6 +65,7 @@ class App extends Component {
       display: { y: null, n: null, u: null },
     },
 
+    mostRecentActions: [],
     mostRecentAction: { word: null, origin: null, destination: null },
 
     configureKeys: () => {
@@ -81,7 +82,7 @@ class App extends Component {
       paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px",
       weAreFinished: false,
       i: 1,
-      mostRecentAction: { word: null, origin: null, destination: null },
+      mostRecentActions: [],
     });
   };
 
@@ -198,6 +199,7 @@ class App extends Component {
       triggers,
       showUploadMenu,
       userIsOnMobile,
+      mostRecentActions,
     } = this.state;
     let pressButtonColor = this.pressButtonColor;
 
@@ -212,13 +214,15 @@ class App extends Component {
             code === triggers.current[label].code
           ) {
             if (shouldIOnlyAllowPressOfUndoButton) {
-              if (label === "u") {
+              if (label === "u" && mostRecentActions.length) {
                 document.getElementById(`${label}Button`).click();
                 pressButtonColor(label);
               }
             } else {
-              document.getElementById(`${label}Button`).click();
-              pressButtonColor(label);
+              if (label !== "u" || mostRecentActions.length) {
+                document.getElementById(`${label}Button`).click();
+                pressButtonColor(label);
+              }
             }
           }
         });
@@ -228,6 +232,8 @@ class App extends Component {
 
   switchToColumn = (destination, word) => {
     const switcheroo = { nList: "yList", yList: "nList" };
+    let mostRecentActions = this.state.mostRecentActions;
+    let check1 = mostRecentActions.length;
 
     this.setState((currState) => {
       let list = {};
@@ -243,13 +249,19 @@ class App extends Component {
       list[destination] = currState.list[destination].slice(0);
       list[destination].push(word);
 
-      return {
-        list,
-        mostRecentAction: {
+      let check2 = this.state.mostRecentActions.length;
+
+      if (check2 === check1) {
+        mostRecentActions.unshift({
           word,
           destination,
           origin: switcheroo[destination],
-        },
+        });
+      }
+
+      return {
+        list,
+        mostRecentActions,
       };
     });
     this.updateScroll(destination);
@@ -335,7 +347,7 @@ class App extends Component {
   };
 
   undo = () => {
-    let { word, destination, origin } = this.state.mostRecentAction;
+    let { word, destination, origin } = this.state.mostRecentActions[0];
     if (word && destination) {
       let redactedDestination = this.state.list[destination].filter(
         (x) => x !== word
@@ -343,7 +355,9 @@ class App extends Component {
       let newState = {};
       newState.list = this.state.list;
       newState.list[destination] = redactedDestination;
-      newState.mostRecentAction = {};
+      newState.mostRecentActions = this.state.mostRecentActions;
+      newState.mostRecentActions.shift();
+
       if (origin === "wordlist") {
         newState.i = this.state.i - 1;
         this.updateScroll(destination);
@@ -403,14 +417,16 @@ class App extends Component {
       let newList = this.state.list;
       let word = this.state.list.wordlist[this.state.i - 1];
       newList[`${label}List`].push(word);
+      let mostRecentActions = this.state.mostRecentActions;
+      mostRecentActions.unshift({
+        word,
+        destination,
+        origin: "wordlist",
+      });
       this.setState({
         i: newI,
         list: newList,
-        mostRecentAction: {
-          word,
-          destination,
-          origin: "wordlist",
-        },
+        mostRecentActions,
       });
       this.updateScroll(destination);
     }
@@ -425,11 +441,7 @@ class App extends Component {
       newState.list.wordlist = currState.list.wordlistBackup.slice(0);
       newState.list.wordlistBackup = currState.list.wordlistBackup.slice(0);
       newState.i = 1;
-      newState.mostRecentAction = {
-        word: null,
-        origin: null,
-        destination: null,
-      };
+      newState.mostRecentActions = [];
 
       return newState;
     });
@@ -566,6 +578,7 @@ class App extends Component {
                 </button>
               </div>
             </div>
+
             <div className={styles.bigtextbox}>
               <p
                 style={{
@@ -588,6 +601,7 @@ class App extends Component {
               ["y", "n"].map((label) => {
                 return (
                   <button
+                    disabled={this.state.weAreFinished}
                     style={{
                       zIndex: this.state.z[label],
                       pointerEvents:
@@ -640,6 +654,7 @@ class App extends Component {
                 );
               })}
           </div>
+
           <div className={styles.listContainer}>
             {["y", "n"].map((label) => {
               return (
@@ -703,6 +718,7 @@ class App extends Component {
             })}
           </div>
         </div>
+
         <div className={styles.littleButtonsContainer}>
           {this.state.userIsOnMobile ? (
             <button
@@ -778,7 +794,17 @@ class App extends Component {
                   
                   `}
                 >
-                  Copy {labelWord}-List
+                  {this.state.userIsOnMobile ? (
+                    <p className={styles.textInsideButton}>
+                      Copy
+                      <br />
+                      {labelWord}-List
+                    </p>
+                  ) : (
+                    <p className={styles.textInsideButton}>
+                      Copy {labelWord}-List
+                    </p>
+                  )}
                 </button>
 
                 <button
@@ -810,6 +836,7 @@ class App extends Component {
 
           <button
             id="uButton"
+            disabled={!this.state.mostRecentActions.length}
             style={{
               zIndex: this.state.z.u,
               pointerEvents:
@@ -818,7 +845,9 @@ class App extends Component {
             }}
             onClick={(e) => {
               e.preventDefault();
-              this.undo();
+              if (this.state.mostRecentActions.length) {
+                this.undo();
+              }
             }}
             className={`  ${styles.fancyButton} 
             

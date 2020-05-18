@@ -246,7 +246,7 @@
 
 .tinyButtonHolderInner {
   margin: 0;
-  width: auto;
+  /* width: 40%; */
 }
 
 .iconButton {
@@ -286,6 +286,7 @@
   padding-right: 0;
   position: relative;
   top: -3px;
+  font-size: 14px;
 }
 
 .counter {
@@ -321,7 +322,7 @@
 .littleHalfButton {
   height: 50%;
   width: 100px;
-  font-size: 12px;
+  font-size: 13.5px;
   border: none;
 }
 
@@ -343,6 +344,11 @@
   box-shadow: 1px 1.5px 5px black;
   border-top: none;
   z-index: 0;
+}
+
+.textInsideButton {
+  margin: 0px;
+  padding: 0px;
 }
 
 @keyframes shimmerY {
@@ -499,6 +505,20 @@
 
   .tinyButtonHolder {
     height: 30%;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .tinyButton {
+    width: 70px;
+    font-size: 11px;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .counter {
+    font-size: 11px;
+    /* width: 20%; */
   }
 
   .uberbox {
@@ -509,6 +529,11 @@
   .littleHalfButton {
     width: 70px;
     font-size: 11px;
+  }
+
+  .littleButton {
+    width: 70px;
+    /* font-size: 11px; */
   }
 
   .copyAndDLButtonsHolder {

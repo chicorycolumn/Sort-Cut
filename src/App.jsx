@@ -9,7 +9,7 @@ import logo from "./images/sword-vertical-symmetrical-words8.png";
 
 class App extends Component {
   state = {
-    makeListShort: true, //dev switch
+    makeListShort: false, //dev switch
     showHelpMenu: false,
     showGearMenu: false,
     eggshellDepressed: "rgb(211, 255, 144)",

@@ -12,22 +12,22 @@ class App extends Component {
     makeListShort: false, //dev switch
     showHelpMenu: false,
     showGearMenu: false,
-    eggshellDepressed: "rgb(211, 255, 144)",
+    showConfigMenu: false,
+    showUploadMenu: false,
+    eggshellDepressed: "rgb(21, 166, 233)",
     offWhite: "#fbfbfb",
     shouldButtonBeActiveClass: {
       y: false,
       n: false,
       u: false,
     },
-    depressionTimeout: 80,
+    depressionTimeout: 120,
     filename: "",
     hoverColor: { n: "#0000e6", y: "#0000e6" },
     userIsOnMobile: false,
     mobileListEditingMode: false,
-    whichListToMakeFlashRightNow: null,
+    whichListToMakeFlashRightNow: { label: null, timeout: null },
     invisibleTextarea: "",
-    showConfigMenu: false,
-    showUploadMenu: false,
     fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
     paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px", // Deliberately 0.5 and not 0, as the 0.5 is unique to mounting, so can avoid endless loop in CDU for overflown check.
     colorOfBigtextBasedAsOverflowcheckFudge: "black",
@@ -43,14 +43,14 @@ class App extends Component {
     },
     triggers: {
       current: {
-        y: { which: 190, code: 190 },
-        n: { which: 191, code: 191 },
-        u: { which: 16, code: 16 },
+        y: { which: 188, code: 188 },
+        n: { which: 190, code: 190 },
+        u: { which: 191, code: 191 },
       },
       backup: {
-        y: { which: 190, code: 190 },
-        n: { which: 191, code: 191 },
-        u: { which: 16, code: 16 },
+        y: { which: 188, code: 188 },
+        n: { which: 190, code: 190 },
+        u: { which: 191, code: 191 },
       },
     },
     z: {
@@ -78,11 +78,20 @@ class App extends Component {
   };
 
   wipeAppState = () => {
-    this.setState({
-      paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px",
-      weAreFinished: false,
-      i: 1,
-      mostRecentActions: [],
+    this.setState((currState) => {
+      let newState = {
+        list: {
+          yList: [],
+          nList: [],
+          wordlist: [],
+          wordlistBackup: [],
+        },
+        paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px",
+        weAreFinished: false,
+        i: 1,
+        mostRecentActions: [],
+      };
+      return newState;
     });
   };
 
@@ -132,21 +141,6 @@ class App extends Component {
 
     if (prevState.showUploadMenu && !this.state.showUploadMenu) {
       this.keepListening();
-      this.wipeAppState();
-      this.setState((currState) => {
-        let newState = { list: {} };
-        newState.list.yList = [];
-        newState.list.nList = [];
-        newState.list.wordlist = currState.list.wordlist.filter(
-          (x) => x !== ""
-        );
-        newState.list.wordlistBackup = currState.list.wordlist.filter(
-          (x) => x !== ""
-        );
-
-        return { newState };
-      });
-
       this.isOverflown(document.getElementById(`bigText${this.state.i}`));
     }
     if (!prevState.showUploadMenu && this.state.showUploadMenu) {
@@ -208,6 +202,7 @@ class App extends Component {
       if (!(showConfigMenu || showUploadMenu || userIsOnMobile)) {
         let which = event.which;
         let code = event.keyCode;
+        console.log(which, code);
         Object.keys(triggers.current).forEach((label) => {
           if (
             which === triggers.current[label].which ||
@@ -269,7 +264,10 @@ class App extends Component {
 
   copyList = (labelWord) => {
     this.setState({
-      whichListToMakeFlashRightNow: labelWord.toLowerCase()[0],
+      whichListToMakeFlashRightNow: {
+        label: labelWord.toLowerCase()[0],
+        timeout: 4000,
+      },
       invisibleTextarea: this.state.list[`${labelWord.toLowerCase()[0]}List`]
         .slice(0)
         .join(this.formatSeparatorFromState()),
@@ -330,7 +328,7 @@ class App extends Component {
     let random = this.state.configLang;
 
     while (random === this.state.configLang) {
-      random = Math.floor(Math.random() * 3); //screw
+      random = Math.floor(Math.random() * 4); //screw
     }
 
     this.setState({
@@ -448,10 +446,12 @@ class App extends Component {
   };
 
   render() {
-    if (this.state.whichListToMakeFlashRightNow) {
+    if (this.state.whichListToMakeFlashRightNow.label) {
       setTimeout(() => {
-        this.setState({ whichListToMakeFlashRightNow: false });
-      }, 4000);
+        this.setState({
+          whichListToMakeFlashRightNow: { label: null, timeout: null },
+        });
+      }, this.state.whichListToMakeFlashRightNow.timeout);
     }
 
     return (
@@ -495,14 +495,29 @@ class App extends Component {
 
         {this.state.showUploadMenu && (
           <div className={styles.obscurus}>
-            <UploadMenu setAppState={this.setAppState} />
+            <UploadMenu
+              setAppState={this.setAppState}
+              wipeAppState={this.wipeAppState}
+            />
           </div>
         )}
 
         <div className={styles.uberbox}>
           <div
             id="bigwordbox"
-            className={styles.bigwordbox}
+            className={`${styles.bigwordbox}
+  
+    ${
+      this.state.whichListToMakeFlashRightNow.label === "bwb" &&
+      styles.flashingBWB
+    }
+    
+    ${
+      this.state.whichListToMakeFlashRightNow.label === "bwb2" &&
+      styles.flashingBWB2
+    }
+    
+    `}
             style={{
               backgroundColor: this.state.weAreFinished && this.state.offWhite,
             }}
@@ -560,12 +575,56 @@ class App extends Component {
                   }}
                   onClick={(e) => {
                     e.preventDefault();
-                    this.startAgain();
+
+                    if (this.state.i === 1) {
+                      let newState = {};
+
+                      newState.list = this.state.list;
+
+                      let array = newState.list.wordlist.slice(0);
+
+                      for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * i);
+                        const temp = array[i];
+                        array[i] = array[j];
+                        array[j] = temp;
+                      }
+
+                      newState.list.wordlistBackup = newState.list.wordlist.slice(
+                        0
+                      );
+
+                      let preNewState = {
+                        whichListToMakeFlashRightNow: {
+                          label: "bwb",
+                          timeout: 500,
+                        },
+                      };
+
+                      this.setState(preNewState);
+                      setTimeout(() => {
+                        newState.list.wordlist = array;
+                        newState.paddingOfBigtextboxBasedOnWhetherOverflowing =
+                          "0.5px";
+                        this.setState(newState);
+                      }, 125);
+                    } else {
+                      let preNewState = {
+                        whichListToMakeFlashRightNow: {
+                          label: "bwb2",
+                          timeout: 500,
+                        },
+                      };
+
+                      this.setState(preNewState);
+
+                      setTimeout(this.startAgain, 125);
+                    }
                   }}
                   id="Start Again"
                   className={`${styles.tinyButton} ${styles.startagainButton}`}
                 >
-                  Start again
+                  {this.state.i === 1 ? "Randomise" : "Start again"}
                 </button>
                 <button
                   onClick={(e) => {
@@ -618,34 +677,32 @@ class App extends Component {
                     className={`
 
 
-                    ${
-                      this.state.shouldButtonBeActiveClass[label] &&
-                      styles.fancyButton_active
-                    } 
+          ${
+            this.state.shouldButtonBeActiveClass[label] &&
+            styles.fancyButton_active
+          } 
 
-                    ${
-                      this.state.shouldButtonBeActiveClass[label] &&
-                      label === "y" &&
-                      styles.yButton_active
-                    } 
+          ${
+            this.state.shouldButtonBeActiveClass[label] &&
+            label === "y" &&
+            styles.yButton_active
+          } 
 
-                    ${
-                      this.state.shouldButtonBeActiveClass[label] &&
-                      label === "n" &&
-                      styles.nButton_active
-                    } 
+          ${
+            this.state.shouldButtonBeActiveClass[label] &&
+            label === "n" &&
+            styles.nButton_active
+          } 
 
-                
+      
 
 
 
-                    ${styles.fancyButton}
-                    ${styles.button} ${
-                      label === "y" ? styles.yButton : styles.nButton
-                    }
-                    
-                    
-                    `}
+          ${styles.fancyButton}
+          ${styles.button} ${label === "y" ? styles.yButton : styles.nButton}
+          
+          
+          `}
                   >
                     {`${label.toUpperCase()} ( ${
                       keys[this.state.triggers.current[label].code] || ""
@@ -672,14 +729,14 @@ class App extends Component {
                   id={`${label}List`}
                   key={`${label}List`}
                   className={`${styles.list} 
-                  
-                  
-                  ${
-                    this.state.whichListToMakeFlashRightNow === label &&
-                    (label === "y" ? styles.flashingY : styles.flashingN)
-                  }
-                  
-                  ${label === "y" ? styles.yList : styles.nList}`}
+        
+        
+        ${
+          this.state.whichListToMakeFlashRightNow.label === label &&
+          (label === "y" ? styles.flashingY : styles.flashingN)
+        }
+        
+        ${label === "y" ? styles.yList : styles.nList}`}
                 >
                   {this.state.list[`${label}List`].map((word) => (
                     <p
@@ -789,10 +846,10 @@ class App extends Component {
                       ? styles.yListButton
                       : styles.nListButton
                   }
-                  
-                  
-                  
-                  `}
+        
+        
+        
+        `}
                 >
                   {this.state.userIsOnMobile ? (
                     <p className={styles.textInsideButton}>
@@ -821,8 +878,8 @@ class App extends Component {
                     this.downloadList(labelWord);
                   }}
                   className={`${styles.fancyButton}
-                  
-                  ${styles.littleHalfButton} ${styles.bottomslice} ${
+        
+        ${styles.littleHalfButton} ${styles.bottomslice} ${
                     labelWord === "Yes"
                       ? styles.yListButton
                       : styles.nListButton
@@ -850,14 +907,11 @@ class App extends Component {
               }
             }}
             className={`  ${styles.fancyButton} 
-            
-            ${
-              this.state.shouldButtonBeActiveClass["u"] &&
-              styles.fancyButton_active
-            } 
-            
-            
-            ${styles.littleButton} ${styles.uButton}`}
+  
+  ${this.state.shouldButtonBeActiveClass["u"] && styles.fancyButton_active} 
+  
+  
+  ${styles.littleButton} ${styles.uButton}`}
           >
             {this.state.userIsOnMobile
               ? "Undo"

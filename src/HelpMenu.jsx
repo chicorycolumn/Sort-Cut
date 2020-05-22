@@ -22,27 +22,21 @@ const HelpMenu = (props) => {
           </button>
         </div>
         <p className={styles.text}>
-          SortCut is a nifty app to help you <b>sort any list</b> into two
-          categories with rapidity and alacrity.
+          SortCut lets you <b>upload, sort, and download</b> any list you want.
           <br /> <br />
-          First, upload your list, either from a .txt file or just copying and
-          pasting raw text into the box provided. The <b>Upload List </b> button
-          is at the top left of the screen.
-          <br /> <br />
-          Remember to choose which <b>punctuation</b> your list items are
-          separated by, so I know how to display your items. You'll see the
-          instructions and examples in that menu.
+          You can copy and paste your list as raw text, or upload a .txt file.
+          Click the <b>Upload List </b> button at the top left.
           <br /> <br />
           Then get sorting! The app shows items one at a time, and you hit the
-          big colourful buttons to lob them into the Yes or No lists. If you're
-          on on a computer, you'll see the keyboard shortcuts in brackets on
-          those buttons. For maximal velocity, set your own{" "}
-          <b>keyboard shortcuts</b>. using the <b>Set Keys</b> button at the
-          bottom left of the screen.
+          big colourful buttons to lob them into the <b>Yes or No lists</b>. If
+          you're on on a computer, you'll see keyboard shortcuts in brackets, so
+          you can do it mouseless! For maximum comfort, set your own{" "}
+          <b>keyboard shortcuts</b> using the <b>Set Keys</b> button at the
+          bottom left.
           <br /> <br />
-          If you're on a phone, just tap the lists to whang items into them. If
-          you're on a large touchscreen device but this isn't happening, you can
-          enable this in settings (gear icon).
+          If you're on a phone, just tap the lists themselves to sort items. If
+          you're on a large touchscreen device but this isn't happening, enable
+          this in the settings (gear icon).
           <br /> <br />
           Enjoy!
         </p>

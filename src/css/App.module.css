@@ -11,20 +11,15 @@
   --y-hover: chartreuse;
   --n-hover: #e60000;
   --menu-yellow: #ffff4d;
-  --yList-darker: #59b300;
-  --nList-darker: #990000;
+  --yList-darker: #3d7a00;
+  --nList-darker: #5c0000;
   --yList-shadow: #408000;
   --nList-shadow: #660000;
-  --alpha: rgb(155, 155, 155);
-  --betta: rgb(110, 110, 110);
-  --B-trunk: rgb(80, 80, 80);
-  --B-trunk-darker: rgb(146, 146, 146);
-
-  --B-eggshell: rgb(243, 255, 225);
-  --B-eggshell-depressed: rgb(211, 255, 144);
-
-  /* --B-eggshell: rgb(220, 249, 255);
-  --B-eggshell-depressed: rgb(174, 241, 255); */
+  --trunk: rgb(80, 80, 80);
+  --trunk-darker: rgb(146, 146, 146);
+  --eggshell: rgb(200, 244, 255);
+  --eggshell-medium: rgb(98, 209, 236);
+  --eggshell-depressed: rgb(21, 166, 233);
   --trunk-height: 3px;
   --trunk-height-depressed: 1.5px;
   --trunk-height-minus-depressed: 1.5px;
@@ -36,7 +31,7 @@
 }
 
 .logoHolder {
-  z-index: 5;
+  z-index: 0;
   position: fixed;
   align-self: center;
   justify-self: center;
@@ -65,6 +60,8 @@
   justify-content: center;
   height: 100vh;
   z-index: 0;
+  /* background-color: var(--nList2); */
+  /* margin-top: -20px; */
 }
 
 .background {
@@ -74,17 +71,19 @@
   /* background-size: 500px; */
   background-repeat: repeat;
   position: fixed;
-  height: 100%;
   width: 100%;
   z-index: -2;
+  height: 110%;
+  margin-top: -20px;
 }
 
 .backgroundShroud {
   position: fixed;
-  height: 100%;
   width: 100%;
   background-color: rgba(238, 255, 224, 0.9);
   z-index: -1;
+  height: 110%;
+  margin-top: -20px;
 }
 
 .invisibleTextarea {
@@ -119,6 +118,16 @@
   justify-content: space-between;
 }
 
+.flashingBWB {
+  animation-name: shimmerBWB;
+  animation-duration: 0.5s;
+}
+
+.flashingBWB2 {
+  animation-name: shimmerBWB2;
+  animation-duration: 0.5s;
+}
+
 .bigtextbox {
   padding: 0px 5% 0px 5%;
   display: flex;
@@ -131,6 +140,8 @@
   -moz-hyphens: auto;
   hyphens: auto;
   overflow: auto;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 .bigText {
@@ -304,6 +315,8 @@
   background-color: rgba(0, 0, 0, 0.65);
   z-index: 1;
   position: fixed;
+  height: 110%;
+  margin-top: -20px;
 }
 
 .configMenuHolder {
@@ -324,6 +337,7 @@
   width: 100px;
   font-size: 13.5px;
   border: none;
+  cursor: pointer;
 }
 
 .copyAndDLButtonsHolder {
@@ -349,6 +363,30 @@
 .textInsideButton {
   margin: 0px;
   padding: 0px;
+}
+
+@keyframes shimmerBWB {
+  0% {
+    background-color: var(--off-white);
+  }
+  30% {
+    background-color: var(--eggshell-medium);
+  }
+  100% {
+    background-color: var(--off-white);
+  }
+}
+
+@keyframes shimmerBWB2 {
+  0% {
+    background-color: var(--off-white);
+  }
+  30% {
+    background-color: var(--eggshell);
+  }
+  100% {
+    background-color: var(--off-white);
+  }
 }
 
 @keyframes shimmerY {
@@ -395,31 +433,31 @@
 }
 
 .fancyButton {
-  border: 1.5px solid var(--B-trunk-darker);
-  background-color: var(--B-eggshell);
-  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+  border: 1.5px solid var(--trunk-darker);
+  background-color: var(--eggshell);
+  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--trunk),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
-  -moz-box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+  -moz-box-shadow: 0px var(--trunk-height) 0px var(--trunk),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
-  box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+  box-shadow: 0px var(--trunk-height) 0px var(--trunk),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 }
 
 .fancyButton:active,
 .fancyButton_active {
-  background-color: var(--B-eggshell-depressed);
-  -webkit-box-shadow: 0px 2px 0px var(--B-trunk), 0px 1px 6px rgba(0, 0, 0, 0.4),
+  background-color: var(--eggshell-depressed);
+  -webkit-box-shadow: 0px 2px 0px var(--trunk), 0px 1px 6px rgba(0, 0, 0, 0.4),
     inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
-  -moz-box-shadow: 0px 2px 0px var(--B-trunk), 0px 1px 6px rgba(0, 0, 0, 0.4),
+  -moz-box-shadow: 0px 2px 0px var(--trunk), 0px 1px 6px rgba(0, 0, 0, 0.4),
     inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
-  box-shadow: 0px var(--trunk-height-depressed) 0px var(--B-trunk),
+  box-shadow: 0px var(--trunk-height-depressed) 0px var(--trunk),
     0px 1px 6px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
@@ -541,7 +579,7 @@
   }
 
   .list {
-    font-size: 100%;
+    font-size: 125%;
     padding-top: 0px;
   }
 
@@ -567,17 +605,17 @@
   }
 
   .fancyButton {
-    -webkit-box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+    -webkit-box-shadow: 0px var(--trunk-height) 0px var(--trunk),
       0px 3px 2.5px rgba(0, 0, 0, 0.4),
       inset 0px 1px 0px rgba(255, 255, 255, 0.3),
       inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
-    -moz-box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+    -moz-box-shadow: 0px var(--trunk-height) 0px var(--trunk),
       0px 3px 2.5px rgba(0, 0, 0, 0.4),
       inset 0px 1px 0px rgba(255, 255, 255, 0.3),
       inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
-    box-shadow: 0px var(--trunk-height) 0px var(--B-trunk),
+    box-shadow: 0px var(--trunk-height) 0px var(--trunk),
       0px 3px 2.5px rgba(0, 0, 0, 0.4),
       inset 0px 1px 0px rgba(255, 255, 255, 0.3),
       inset 0px 0px 3px rgba(255, 255, 255, 0.5);

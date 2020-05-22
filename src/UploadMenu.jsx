@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styles from "./css/UploadMenu.module.css";
 import Bucket from "./Bucket.jsx";
+import { filterBlankLines } from "./utils";
 import screenshot from "./images/text screenshots a.png";
 const egSeps = [
   { label: "space", char: "\\s" },
@@ -49,7 +50,8 @@ class UploadMenu extends Component {
       }
     }
     let array = string.split(splittr);
-    return array;
+
+    return filterBlankLines(array);
   };
 
   componentDidMount() {
@@ -82,8 +84,9 @@ class UploadMenu extends Component {
     };
 
     newStateForApp.separator = this.state.separator.char;
-
     newStateForApp.showUploadMenu = false;
+
+    this.props.wipeAppState();
 
     this.props.setAppState(newStateForApp);
   };
@@ -125,8 +128,7 @@ class UploadMenu extends Component {
   };
 
   quitUpload = () => {
-    let newStateForApp = { showUploadMenu: false };
-    this.props.setAppState(newStateForApp);
+    this.props.setAppState({ showUploadMenu: false });
   };
 
   render() {
@@ -208,7 +210,7 @@ class UploadMenu extends Component {
                     className={styles.uploadButton}
                     style={{ backgroundColor: "chartreuse" }}
                   >
-                    Go!
+                    Let's go!
                   </button>
                 ) : (
                   <button
@@ -321,7 +323,7 @@ class UploadMenu extends Component {
             />
           </div>
         )}
-        {this.state.filename.length &&
+        {!!this.state.filename.length &&
           !this.state.showBucket &&
           !this.state.showSeparatorInput && (
             <button

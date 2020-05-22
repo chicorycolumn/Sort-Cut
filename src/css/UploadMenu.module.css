@@ -151,7 +151,7 @@
   justify-self: center;
   justify-items: center;
   justify-content: center;
-  height: 350px;
+  height: 30%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -223,6 +223,7 @@
   width: 285px;
   position: relative;
   opacity: 0.85;
+  margin-top: 5px;
 }
 
 .sepRightInput {
@@ -253,9 +254,23 @@
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .right {
+    width: 50%;
+  }
+
+  .uploadMenuHolder {
+    margin-top: -12.5px;
+    /* background-color: blue; */
+    height: 100%;
+    overflow: hidden;
+    max-height: 100vh;
+  }
+
   .superUploadOptionsHolder {
     background-color: var(--menu-yellow);
     width: 90%;
+    height: 190px;
+    min-height: 190px;
   }
 
   .uploadButton {
@@ -289,9 +304,5 @@
   .sepRight {
     font-size: 13px;
     top: -5px;
-  }
-
-  .uploadMenuHolder {
-    margin-top: -12.5px;
   }
 }

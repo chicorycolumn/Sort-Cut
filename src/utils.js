@@ -41,6 +41,16 @@ export const configText = [
     "Grazie!",
     "Va bene",
   ],
+
+  [
+    "Hullo, ma name's Mr MacClip. A'm here tae help ye configure the buttons. Press any key tae continue.",
+    "Richt then, tae start, press the key ye want tae mean AY.",
+    "Guid, now choose the key tae mean NAW.",
+    "An finally, which key dae ye want for the UNDAE button?",
+    "Hae a guid day, an see ye efter!",
+    "Thank ye!",
+    "Ay.",
+  ],
 ];
 
 export const keys = {

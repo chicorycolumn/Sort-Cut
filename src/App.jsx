@@ -328,7 +328,7 @@ class App extends Component {
     let random = this.state.configLang;
 
     while (random === this.state.configLang) {
-      random = Math.floor(Math.random() * 4); //screw
+      random = Math.floor(Math.random() * 5); //screw
     }
 
     this.setState({

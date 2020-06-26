@@ -26,7 +26,7 @@ export const configText = [
   [
     "Hola! Yo soy Señor Clipedro, and I will help you configurar los botones. Press any tecla to continue.",
     "Pues, to start please press the tecla - ay, quiero decir the key - that you want to mean SÍ.",
-    "Genial! E ora please choose the key to mean NO.",
+    "Genial! Ahora, por favor, choose the key to mean NO.",
     "Y al fin, which tecla quieres for the botón deshacer? Aj, disculpe! Eso es the UNDO button.",
     "Bien hecho, y adios!",
     "Gracias!",

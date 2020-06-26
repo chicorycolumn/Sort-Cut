@@ -638,7 +638,16 @@ class App extends Component {
               </div>
             </div>
 
-            <div className={styles.bigtextbox}>
+            <div
+              className={styles.bigtextbox}
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(
+                  "http://google.com/search?q=define+" +
+                    this.state.list.wordlist[this.state.i - 1]
+                );
+              }}
+            >
               <p
                 style={{
                   paddingTop: this.state

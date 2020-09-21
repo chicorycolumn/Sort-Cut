@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styles from "./css/UploadMenu.module.css";
+import menuStyles from "./css/Menu.module.css";
 import Bucket from "./Bucket.jsx";
 import { filterBlankLines } from "./utils";
 import screenshot from "./images/text screenshots a.png";
@@ -239,8 +240,12 @@ class UploadMenu extends Component {
               }}
               className={styles.uploadX}
             >
-              <span role="img" aria-label="Red X">
-                ❌
+              <span
+                role="img"
+                aria-label="Red X"
+                className={menuStyles.exitSymbol}
+              >
+                &times;
               </span>
             </button>
           </div>
@@ -308,8 +313,12 @@ class UploadMenu extends Component {
                     }}
                     className={styles.uploadX2}
                   >
-                    <span role="img" aria-label="Red X">
-                      ❌
+                    <span
+                      role="img"
+                      aria-label="Red X"
+                      className={menuStyles.exitSymbol}
+                    >
+                      &times;
                     </span>
                   </button>
                 </div>

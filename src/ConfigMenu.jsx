@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styles from "./css/ConfigMenu.module.css";
+import menuStyles from "./css/Menu.module.css";
 import brokenclippy from "./images/brokenclippy.png";
 import clippy0 from "./images/clippy0.png";
 import clippy1 from "./images/clippy1.png";
@@ -176,8 +177,12 @@ class ConfigMenu extends Component {
               }}
               className={styles.configX}
             >
-              <span role="img" aria-label="Red X">
-                ❌
+              <span
+                role="img"
+                aria-label="Red X"
+                className={menuStyles.exitSymbol}
+              >
+                &times;
               </span>
             </button>
           )}

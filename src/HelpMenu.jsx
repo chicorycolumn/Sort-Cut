@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./css/HelpMenu.module.css";
+import menuStyles from "./css/Menu.module.css";
 
 const HelpMenu = (props) => {
   return (
@@ -16,8 +17,12 @@ const HelpMenu = (props) => {
             }}
             className={styles.configX}
           >
-            <span role="img" aria-label="Red X">
-              ❌
+            <span
+              role="img"
+              aria-label="Red X"
+              className={menuStyles.exitSymbol}
+            >
+              &times;
             </span>
           </button>
         </div>

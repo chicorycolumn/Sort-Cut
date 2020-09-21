@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import styles from "./css/Bucket.module.css";
+import menuStyles from "./css/Menu.module.css";
+
 class Bucket extends Component {
   state = {
     cssTopPropertyOfTextareaBasedOnRectTopOfBigwordbox: "260px",
@@ -39,8 +41,12 @@ class Bucket extends Component {
             }}
             className={styles.uploadX}
           >
-            <span role="img" aria-label="Red X">
-              ❌
+            <span
+              role="img"
+              aria-label="Red X"
+              className={menuStyles.exitSymbol}
+            >
+              &times;
             </span>
           </button>
         </div>

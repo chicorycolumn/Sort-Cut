@@ -2,19 +2,19 @@
   --main-width: 90%;
   --min-width: 450px;
   --max-width: 650px;
-  --yList: lightgreen;
-  --yList2: #bdf5bd;
-  --yList2Lighter: #d3f8d3;
-  --nList: #ff9999;
-  --nList2: #ffcccc;
+  --yesList: lightgreen;
+  --yesList2: #bdf5bd;
+  --yesList2Lighter: #d3f8d3;
+  --noList: #ff9999;
+  --noList2: #ffcccc;
   --off-white: #fbfbfb;
   --y-hover: chartreuse;
   --n-hover: #e60000;
   --menu-yellow: #ffff4d;
-  --yList-darker: #3d7a00;
-  --nList-darker: #5c0000;
-  --yList-shadow: #408000;
-  --nList-shadow: #660000;
+  --yesList-darker: #3d7a00;
+  --noList-darker: #5c0000;
+  --yesList-shadow: #408000;
+  --noList-shadow: #660000;
   --trunk: rgb(80, 80, 80);
   --trunk-darker: rgb(146, 146, 146);
   --eggshell: rgb(200, 244, 255);
@@ -60,7 +60,7 @@
   justify-content: center;
   height: 100vh;
   z-index: 0;
-  /* background-color: var(--nList2); */
+  /* background-color: var(--noList2); */
   /* margin-top: -20px; */
 }
 
@@ -195,26 +195,26 @@
   overflow: auto;
 }
 
-.yList {
-  background-color: var(--yList);
+.yesList {
+  background-color: var(--yesList);
   border-right: rgba(0, 0, 0, 0.3) solid 0.5pt;
 }
 
-.nList {
-  background-color: var(--nList);
+.noList {
+  background-color: var(--noList);
   border-left: rgba(0, 0, 0, 0.3) solid 0.5pt;
 }
 
-.wordinlist {
+.wordinthelist {
   margin: 5px auto 5px auto;
 }
 
-.nList .wordinlist:hover {
+.noList .wordinthelist:hover {
   color: var(--y-hover);
   cursor: w-resize;
 }
 
-.yList .wordinlist:hover {
+.yesList .wordinthelist:hover {
   color: var(--n-hover);
   cursor: e-resize;
 }
@@ -223,11 +223,11 @@
   cursor: pointer;
 }
 
-.nListButton {
-  background-color: var(--nList2);
+.noListButton {
+  background-color: var(--noList2);
 }
 
-.uButton {
+.undoButton {
   z-index: 2;
 }
 
@@ -392,13 +392,13 @@
 
 @keyframes shimmerY {
   0% {
-    background-color: var(--yList);
+    background-color: var(--yesList);
   }
   30% {
-    background-color: var(--yList2Lighter);
+    background-color: var(--yesList2Lighter);
   }
   100% {
-    background-color: var(--yList);
+    background-color: var(--yesList);
   }
 }
 
@@ -409,13 +409,13 @@
 
 @keyframes shimmerN {
   0% {
-    background-color: var(--nList);
+    background-color: var(--noList);
   }
   30% {
-    background-color: var(--nList2);
+    background-color: var(--noList2);
   }
   100% {
-    background-color: var(--nList);
+    background-color: var(--noList);
   }
 }
 
@@ -470,69 +470,69 @@
   transition: all 0.05s ease-in-out;
 }
 
-.yListButton {
-  background-color: var(--yList2);
+.yesListButton {
+  background-color: var(--yesList2);
 }
 
-.nListButton {
-  background-color: var(--nList2);
+.noListButton {
+  background-color: var(--noList2);
 }
 
-.yListButton:active {
-  background-color: var(--yList);
+.yesListButton:active {
+  background-color: var(--yesList);
 }
 
-.nListButton:active {
-  background-color: var(--nList);
+.noListButton:active {
+  background-color: var(--noList);
 }
 
-.yButton {
+.yesButton {
   z-index: 2;
-  /* box-shadow: 0px 2px 3px var(--yList-shadow); */
-  border: var(--yList-darker) solid 1pt;
-  border-top: var(--yList-darker) solid 2pt;
+  /* box-shadow: 0px 2px 3px var(--yesList-shadow); */
+  border: var(--yesList-darker) solid 1pt;
+  border-top: var(--yesList-darker) solid 2pt;
   background-color: var(--y-hover);
-  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--yList-shadow),
+  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--yesList-shadow),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
-  -moz-box-shadow: 0px var(--trunk-height) 0px var(--yList-shadow),
+  -moz-box-shadow: 0px var(--trunk-height) 0px var(--yesList-shadow),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
-  box-shadow: 0px var(--trunk-height) 0px var(--yList-shadow),
+  box-shadow: 0px var(--trunk-height) 0px var(--yesList-shadow),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 }
 
-.yButton:active,
-.yButton_active {
-  background-color: var(--yList-darker);
+.yesButton:active,
+.yesButton_active {
+  background-color: var(--yesList-darker);
 }
 
-.nButton {
+.noButton {
   z-index: 2;
-  /* box-shadow: 0px 2px 3px var(--nList-shadow); */
-  border: var(--nList-darker) solid 1pt;
-  border-top: var(--nList-darker) solid 2pt;
+  /* box-shadow: 0px 2px 3px var(--noList-shadow); */
+  border: var(--noList-darker) solid 1pt;
+  border-top: var(--noList-darker) solid 2pt;
   background-color: var(--n-hover);
 
-  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--nList-shadow),
+  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--noList-shadow),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
-  -moz-box-shadow: 0px var(--trunk-height) 0px var(--nList-shadow),
+  -moz-box-shadow: 0px var(--trunk-height) 0px var(--noList-shadow),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
-  box-shadow: 0px var(--trunk-height) 0px var(--nList-shadow),
+  box-shadow: 0px var(--trunk-height) 0px var(--noList-shadow),
     2px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 }
 
-.nButton:active,
-.nButton_active {
-  background-color: var(--nList-darker);
+.noButton:active,
+.noButton_active {
+  background-color: var(--noList-darker);
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
@@ -597,11 +597,11 @@
     --trunk-height-minus-depressed: 1px;
   }
 
-  .nList .wordinlist:hover {
+  .noList .wordinthelist:hover {
     color: inherit;
   }
 
-  .yList .wordinlist:hover {
+  .yesList .wordinthelist:hover {
     color: inherit;
   }
 

@@ -31,26 +31,26 @@ class UploadMenu extends Component {
 
   formatRawInput = (string) => {
     let arr = this.state.separator.char.split("");
-    let splittr = "";
+    let splitter = "";
 
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] !== "\\") {
-        splittr = splittr.concat(arr[i]);
+        splitter = splitter.concat(arr[i]);
       } else {
         if (arr[i + 1] === "t") {
-          splittr = splittr.concat("\t");
+          splitter = splitter.concat("\t");
         } else if (arr[i + 1] === "s") {
-          splittr = splittr.concat(" ");
+          splitter = splitter.concat(" ");
         } else if (arr[i + 1] === "n") {
-          splittr = splittr.concat("\n");
+          splitter = splitter.concat("\n");
         } else {
-          splittr = splittr.concat("\\");
-          splittr = splittr.concat(arr[i + 1]);
+          splitter = splitter.concat("\\");
+          splitter = splitter.concat(arr[i + 1]);
         }
         i++;
       }
     }
-    let array = string.split(splittr);
+    let array = string.split(splitter);
 
     return filterBlankLines(array);
   };
@@ -78,8 +78,8 @@ class UploadMenu extends Component {
     let arrayFromInput = this.formatRawInput(input);
 
     newStateForApp.list = {
-      yList: [],
-      nList: [],
+      yesList: [],
+      noList: [],
       wordlist: arrayFromInput,
       wordlistBackup: arrayFromInput,
     };
@@ -277,7 +277,7 @@ class UploadMenu extends Component {
                           }}
                           className={styles.littleUploadButton2}
                         >
-                          {sepObj.label[0].toUpperCase() +
+                          {sepObj.label[0].toLowerCase() +
                             sepObj.label.slice(1)}
                         </button>
                       );

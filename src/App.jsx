@@ -1,6 +1,6 @@
 import styles from "./css/App.module.css";
 import React, { Component } from "react";
-import { keys, animals } from "./utils.js";
+import { animals } from "./utils.js";
 import ConfigMenu from "./ConfigMenu.jsx";
 import UploadMenu from "./UploadMenu.jsx";
 import GearMenu from "./GearMenu.jsx";
@@ -9,7 +9,7 @@ import logo from "./images/sword-vertical-symmetrical-words8.png";
 
 class App extends Component {
   state = {
-    makeListShort: false, //dev switch
+    makeListShort: false,
     showHelpMenu: false,
     showGearMenu: false,
     showConfigMenu: false,
@@ -17,52 +17,52 @@ class App extends Component {
     eggshellDepressed: "rgb(21, 166, 233)",
     offWhite: "#fbfbfb",
     shouldButtonBeActiveClass: {
-      y: false,
-      n: false,
-      u: false,
+      yes: false,
+      no: false,
+      undo: false,
     },
     depressionTimeout: 120,
     filename: "",
-    hoverColor: { n: "#0000e6", y: "#0000e6" },
-    userIsOnMobile: false,
+    hoverColor: { no: "#0000e6", yes: "#0000e6" },
+    isTouchscreen: false,
     mobileListEditingMode: false,
     whichListToMakeFlashRightNow: { label: null, timeout: null },
     invisibleTextarea: "",
     fontsizeOfBigtextBasedOnWhetherOverflowing: "8.35vh",
-    paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px", // Deliberately 0.5 and not 0, as the 0.5 is unique to mounting, so can avoid endless loop in CDU for overflown check.
+    paddingOfBigtextboxBasedOnWhetherOverflowing: "0.5px",
     colorOfBigtextBasedAsOverflowcheckFudge: "black",
     separator: "\n",
     weAreFinished: false,
     configLang: 0,
     i: 1,
     list: {
-      yList: [],
-      nList: [],
+      yesList: [],
+      noList: [],
       wordlist: [],
       wordlistBackup: [],
     },
     triggers: {
       current: {
-        y: { which: 188, code: 188 },
-        n: { which: 190, code: 190 },
-        u: { which: 191, code: 191 },
+        yes: { code: "." },
+        no: { code: "/" },
+        undo: { code: "Shift" },
       },
       backup: {
-        y: { which: 188, code: 188 },
-        n: { which: 190, code: 190 },
-        u: { which: 191, code: 191 },
+        yes: { code: "." },
+        no: { code: "/" },
+        undo: { code: "Shift" },
       },
     },
-    z: {
-      y: 0,
-      n: 0,
-      u: 0,
+    zIndex: {
+      yes: 0,
+      no: 0,
+      undo: 0,
     },
 
     colors: {
-      reference: { y: "chartreuse", n: "#cc0000", u: "#ffffff" },
-      depressed: { y: "#59b300", n: "#990000", u: "#e6e6e6" },
-      display: { y: null, n: null, u: null },
+      reference: { yes: "chartreuse", no: "#cc0000", undo: "#ffffff" },
+      depressed: { yes: "#59b300", no: "#990000", undo: "#e6e6e6" },
+      display: { yes: null, no: null, undo: null },
     },
 
     mostRecentActions: [],
@@ -81,8 +81,8 @@ class App extends Component {
     this.setState((currState) => {
       let newState = {
         list: {
-          yList: [],
-          nList: [],
+          yesList: [],
+          noList: [],
           wordlist: [],
           wordlistBackup: [],
         },
@@ -95,8 +95,14 @@ class App extends Component {
     });
   };
 
+  checkIfTouchscreen = () => {
+    return !!("ontouchstart" in window || navigator.maxTouchPoints);
+  };
+
   componentDidMount() {
-    this.setState({ userIsOnMobile: window.screen.width <= 568 });
+    this.setState({
+      isTouchscreen: window.screen.width <= 568 || this.checkIfTouchscreen(),
+    });
     this.setState((currState) => {
       let newState = { colors: currState.colors };
       Object.keys(newState.colors.display).forEach((key) => {
@@ -192,29 +198,24 @@ class App extends Component {
       showConfigMenu,
       triggers,
       showUploadMenu,
-      userIsOnMobile,
+      isTouchscreen,
       mostRecentActions,
     } = this.state;
     let pressButtonColor = this.pressButtonColor;
 
     document.onkeyup = function (event) {
       event.preventDefault();
-      if (!(showConfigMenu || showUploadMenu || userIsOnMobile)) {
-        let which = event.which;
-        let code = event.keyCode;
-        console.log(which, code);
+      if (!(showConfigMenu || showUploadMenu || isTouchscreen)) {
+        let code = event.key;
         Object.keys(triggers.current).forEach((label) => {
-          if (
-            which === triggers.current[label].which ||
-            code === triggers.current[label].code
-          ) {
+          if (code === triggers.current[label].code) {
             if (shouldIOnlyAllowPressOfUndoButton) {
-              if (label === "u" && mostRecentActions.length) {
+              if (label === "undo" && mostRecentActions.length) {
                 document.getElementById(`${label}Button`).click();
                 pressButtonColor(label);
               }
             } else {
-              if (label !== "u" || mostRecentActions.length) {
+              if (label !== "undo" || mostRecentActions.length) {
                 document.getElementById(`${label}Button`).click();
                 pressButtonColor(label);
               }
@@ -226,7 +227,7 @@ class App extends Component {
   };
 
   switchToColumn = (destination, word) => {
-    const switcheroo = { nList: "yList", yList: "nList" };
+    const invert = { noList: "yesList", yesList: "noList" };
     let mostRecentActions = this.state.mostRecentActions;
     let check1 = mostRecentActions.length;
 
@@ -237,9 +238,9 @@ class App extends Component {
         list[key] = currState.list[key].slice(0);
       });
 
-      list[switcheroo[destination]] = currState.list[
-        switcheroo[destination]
-      ].filter((x) => x !== word);
+      list[invert[destination]] = currState.list[invert[destination]].filter(
+        (x) => x !== word
+      );
 
       list[destination] = currState.list[destination].slice(0);
       list[destination].push(word);
@@ -250,7 +251,7 @@ class App extends Component {
         mostRecentActions.unshift({
           word,
           destination,
-          origin: switcheroo[destination],
+          origin: invert[destination],
         });
       }
 
@@ -262,13 +263,13 @@ class App extends Component {
     this.updateScroll(destination);
   };
 
-  copyList = (labelWord) => {
+  copyTheList = (labelWord) => {
     this.setState({
       whichListToMakeFlashRightNow: {
-        label: labelWord.toLowerCase()[0],
+        label: labelWord.toLowerCase(),
         timeout: 4000,
       },
-      invisibleTextarea: this.state.list[`${labelWord.toLowerCase()[0]}List`]
+      invisibleTextarea: this.state.list[`${labelWord.toLowerCase()}List`]
         .slice(0)
         .join(this.formatSeparatorFromState()),
     });
@@ -276,38 +277,38 @@ class App extends Component {
     setTimeout(() => {
       let el = document.getElementById("invisibleTextarea");
       el.select();
-      el.setSelectionRange(0, 99999); /*For mobile devices*/
+      el.setSelectionRange(0, 99999);
       document.execCommand("copy");
     }, 500);
   };
 
   formatSeparatorFromState = () => {
     let arr = this.state.separator.split("");
-    let splittr = "";
+    let splitter = "";
 
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] !== "\\") {
-        splittr = splittr.concat(arr[i]);
+        splitter = splitter.concat(arr[i]);
       } else {
         if (arr[i + 1] === "t") {
-          splittr = splittr.concat("\t");
+          splitter = splitter.concat("\t");
         } else if (arr[i + 1] === "s") {
-          splittr = splittr.concat(" ");
+          splitter = splitter.concat(" ");
         } else if (arr[i + 1] === "n") {
-          splittr = splittr.concat("\n");
+          splitter = splitter.concat("\n");
         } else {
-          splittr = splittr.concat("\\");
-          splittr = splittr.concat(arr[i + 1]);
+          splitter = splitter.concat("\\");
+          splitter = splitter.concat(arr[i + 1]);
         }
         i++;
       }
     }
-    return splittr;
+    return splitter;
   };
 
   downloadList = (labelWord) => {
     let stringFromWordArray = this.state.list[
-      `${labelWord[0].toLowerCase()}List`
+      `${labelWord.toLowerCase()}List`
     ].join(this.formatSeparatorFromState());
     let myblob = new Blob([stringFromWordArray], {
       type: "text/plain",
@@ -328,7 +329,7 @@ class App extends Component {
     let random = this.state.configLang;
 
     while (random === this.state.configLang) {
-      random = Math.floor(Math.random() * 5); //screw
+      random = Math.floor(Math.random() * 5);
     }
 
     this.setState({
@@ -365,7 +366,7 @@ class App extends Component {
         newState.list[origin] = revertedOrigin;
       }
       this.setState(newState);
-      if (origin === "yList" || origin === "nList") {
+      if (origin === "yesList" || origin === "noList") {
         this.updateScroll(origin);
       }
     }
@@ -408,7 +409,7 @@ class App extends Component {
     }
   };
 
-  putWordInList = (label) => {
+  putWordInTheList = (label) => {
     if (!(this.state.weAreFinished || this.state.showConfigMenu)) {
       let destination = `${label}List`;
       let newI = this.state.i + 1;
@@ -434,8 +435,8 @@ class App extends Component {
     this.setState((currState) => {
       let newState = { list: {} };
 
-      newState.list.yList = [];
-      newState.list.nList = [];
+      newState.list.yesList = [];
+      newState.list.noList = [];
       newState.list.wordlist = currState.list.wordlistBackup.slice(0);
       newState.list.wordlistBackup = currState.list.wordlistBackup.slice(0);
       newState.i = 1;
@@ -469,7 +470,7 @@ class App extends Component {
           <div className={styles.obscurus}>
             <ConfigMenu
               triggers={this.state.triggers}
-              z={this.state.z}
+              zIndex={this.state.zIndex}
               configLang={this.state.configLang}
               keepListening={this.keepListening}
               setAppState={this.setAppState}
@@ -488,7 +489,7 @@ class App extends Component {
           <div className={styles.obscurus}>
             <GearMenu
               setAppState={this.setAppState}
-              userIsOnMobile={this.state.userIsOnMobile}
+              isTouchscreen={this.state.isTouchscreen}
             />
           </div>
         )}
@@ -506,18 +507,15 @@ class App extends Component {
           <div
             id="bigwordbox"
             className={`${styles.bigwordbox}
-  
-    ${
-      this.state.whichListToMakeFlashRightNow.label === "bwb" &&
-      styles.flashingBWB
-    }
-    
-    ${
-      this.state.whichListToMakeFlashRightNow.label === "bwb2" &&
-      styles.flashingBWB2
-    }
-    
-    `}
+              ${
+                this.state.whichListToMakeFlashRightNow.label === "bwb" &&
+                styles.flashingBWB
+              }
+              ${
+                this.state.whichListToMakeFlashRightNow.label === "bwb2" &&
+                styles.flashingBWB2
+              }
+            `}
             style={{
               backgroundColor: this.state.weAreFinished && this.state.offWhite,
             }}
@@ -560,7 +558,7 @@ class App extends Component {
 
               <p className={styles.counter}>
                 {this.state.weAreFinished
-                  ? `Yes: ${this.state.list.yList.length} - No: ${this.state.list.nList.length}`
+                  ? `Yes: ${this.state.list.yesList.length} - No: ${this.state.list.noList.length}`
                   : `${this.state.i} of ${this.state.list.wordlist.length}`}
               </p>
               <div className={styles.tinyButtonHolderInner}>
@@ -665,13 +663,13 @@ class App extends Component {
           </div>
 
           <div className={styles.buttonbox}>
-            {!this.state.userIsOnMobile &&
-              ["y", "n"].map((label) => {
+            {!this.state.isTouchscreen &&
+              ["yes", "no"].map((label) => {
                 return (
                   <button
                     disabled={this.state.weAreFinished}
                     style={{
-                      zIndex: this.state.z[label],
+                      zIndex: this.state.zIndex[label],
                       pointerEvents:
                         (this.state.showConfigMenu ||
                           this.state.showUploadMenu) &&
@@ -681,71 +679,64 @@ class App extends Component {
                     key={`${label}Button`}
                     onClick={(e) => {
                       e.preventDefault();
-                      this.putWordInList(label);
+                      this.putWordInTheList(label);
                     }}
                     className={`
+                      ${
+                        this.state.shouldButtonBeActiveClass[label] &&
+                        styles.fancyButton_active
+                      } 
 
+                      ${
+                        this.state.shouldButtonBeActiveClass[label] &&
+                        label === "yes" &&
+                        styles.yesButton_active
+                      } 
 
-          ${
-            this.state.shouldButtonBeActiveClass[label] &&
-            styles.fancyButton_active
-          } 
+                      ${
+                        this.state.shouldButtonBeActiveClass[label] &&
+                        label === "no" &&
+                        styles.noButton_active
+                      } 
 
-          ${
-            this.state.shouldButtonBeActiveClass[label] &&
-            label === "y" &&
-            styles.yButton_active
-          } 
-
-          ${
-            this.state.shouldButtonBeActiveClass[label] &&
-            label === "n" &&
-            styles.nButton_active
-          } 
-
-      
-
-
-
-          ${styles.fancyButton}
-          ${styles.button} ${label === "y" ? styles.yButton : styles.nButton}
-          
-          
-          `}
+                      ${styles.fancyButton}
+                      
+                      ${styles.button} ${
+                      label === "yes" ? styles.yesButton : styles.noButton
+                    } 
+                   `}
                   >
-                    {`${label.toUpperCase()} ( ${
-                      keys[this.state.triggers.current[label].code] || ""
-                    } )`}
+                    {`${
+                      label[0].toUpperCase() + label.slice(1).toLowerCase()
+                    } ( ${this.state.triggers.current[label].code || ""} )`}
                   </button>
                 );
               })}
           </div>
 
           <div className={styles.listContainer}>
-            {["y", "n"].map((label) => {
+            {["yes", "no"].map((label) => {
               return (
                 <div
                   onClick={(e) => {
                     e.preventDefault();
 
                     if (
-                      this.state.userIsOnMobile &&
+                      this.state.isTouchscreen &&
                       !this.state.mobileListEditingMode
                     ) {
-                      this.putWordInList(label);
+                      this.putWordInTheList(label);
                     }
                   }}
                   id={`${label}List`}
                   key={`${label}List`}
                   className={`${styles.list} 
-        
-        
-        ${
-          this.state.whichListToMakeFlashRightNow.label === label &&
-          (label === "y" ? styles.flashingY : styles.flashingN)
-        }
-        
-        ${label === "y" ? styles.yList : styles.nList}`}
+                    ${
+                      this.state.whichListToMakeFlashRightNow.label === label &&
+                      (label === "yes" ? styles.flashingY : styles.flashingN)
+                    }
+                    
+                    ${label === "yes" ? styles.yesList : styles.noList}`}
                 >
                   {this.state.list[`${label}List`].map((word) => (
                     <p
@@ -764,17 +755,17 @@ class App extends Component {
                         e.preventDefault();
 
                         if (
-                          !this.state.userIsOnMobile ||
-                          (this.state.userIsOnMobile &&
+                          !this.state.isTouchscreen ||
+                          (this.state.isTouchscreen &&
                             this.state.mobileListEditingMode)
                         ) {
                           this.switchToColumn(
-                            `${label === "y" ? "n" : "y"}List`,
+                            `${label === "yes" ? "no" : "yes"}List`,
                             word
                           );
                         }
                       }}
-                      className={styles.wordinlist}
+                      className={styles.wordinthelist}
                     >
                       {word}
                     </p>
@@ -786,7 +777,7 @@ class App extends Component {
         </div>
 
         <div className={styles.littleButtonsContainer}>
-          {this.state.userIsOnMobile ? (
+          {this.state.isTouchscreen ? (
             <button
               style={{
                 backgroundColor:
@@ -832,7 +823,7 @@ class App extends Component {
           {["Yes", "No"].map((labelWord) => {
             return (
               <div
-                key={`Download And Copy ${labelWord[0].toLowerCase()}Holder`}
+                key={`Download And Copy ${labelWord.toLowerCase()}Holder`}
                 className={styles.copyAndDLButtonsHolder}
               >
                 <button
@@ -842,25 +833,22 @@ class App extends Component {
                         this.state.showUploadMenu) &&
                       "none",
                   }}
-                  key={`Copy ${labelWord[0].toLowerCase()}List`}
-                  id={`Copy ${labelWord[0].toLowerCase()}List`}
+                  key={`Copy ${labelWord.toLowerCase()}List`}
+                  id={`Copy ${labelWord.toLowerCase()}List`}
                   onClick={(e) => {
                     e.preventDefault();
-                    this.copyList(labelWord);
+                    this.copyTheList(labelWord);
                   }}
                   className={`${styles.fancyButton} ${
                     styles.littleHalfButton
                   } ${styles.topslice} ${
                     labelWord === "Yes"
-                      ? styles.yListButton
-                      : styles.nListButton
+                      ? styles.yesListButton
+                      : styles.noListButton
                   }
-        
-        
-        
-        `}
+                  `}
                 >
-                  {this.state.userIsOnMobile ? (
+                  {this.state.isTouchscreen ? (
                     <p className={styles.textInsideButton}>
                       Copy
                       <br />
@@ -880,18 +868,17 @@ class App extends Component {
                         this.state.showUploadMenu) &&
                       "none",
                   }}
-                  key={`Download ${labelWord[0].toLowerCase()}List`}
-                  id={`Download ${labelWord[0].toLowerCase()}List`}
+                  key={`Download ${labelWord.toLowerCase()}List`}
+                  id={`Download ${labelWord.toLowerCase()}List`}
                   onClick={(e) => {
                     e.preventDefault();
                     this.downloadList(labelWord);
                   }}
                   className={`${styles.fancyButton}
-        
-        ${styles.littleHalfButton} ${styles.bottomslice} ${
+                    ${styles.littleHalfButton} ${styles.bottomslice} ${
                     labelWord === "Yes"
-                      ? styles.yListButton
-                      : styles.nListButton
+                      ? styles.yesListButton
+                      : styles.noListButton
                   }`}
                 >
                   Download
@@ -901,10 +888,10 @@ class App extends Component {
           })}
 
           <button
-            id="uButton"
+            id="undoButton"
             disabled={!this.state.mostRecentActions.length}
             style={{
-              zIndex: this.state.z.u,
+              zIndex: this.state.zIndex.undo,
               pointerEvents:
                 (this.state.showConfigMenu || this.state.showUploadMenu) &&
                 "none",
@@ -916,15 +903,15 @@ class App extends Component {
               }
             }}
             className={`  ${styles.fancyButton} 
-  
-  ${this.state.shouldButtonBeActiveClass["u"] && styles.fancyButton_active} 
-  
-  
-  ${styles.littleButton} ${styles.uButton}`}
+              ${
+                this.state.shouldButtonBeActiveClass["undo"] &&
+                styles.fancyButton_active
+              } 
+              ${styles.littleButton} ${styles.undoButton}`}
           >
-            {this.state.userIsOnMobile
+            {this.state.isTouchscreen
               ? "Undo"
-              : `Undo ( ${keys[this.state.triggers.current.u.code] || ""} )`}
+              : `Undo ( ${this.state.triggers.current.undo.code || ""} )`}
           </button>
         </div>
       </div>

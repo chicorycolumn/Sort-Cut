@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import styles from "./css/ConfigMenu.module.css";
 import menuStyles from "./css/Menu.module.css";
-import brokenclippy from "./images/brokenclippy.png";
 import clippy0 from "./images/clippy0.png";
 import clippy1 from "./images/clippy1.png";
 import clippy2 from "./images/clippy2.png";
@@ -12,7 +11,6 @@ import { configText } from "./utils.js";
 class ConfigMenu extends Component {
   state = {
     showConfigMenu: null,
-    forceBrokenClippy: false, //dev switch
     clippy: [clippy0, clippy1, clippy2, clippy3, clippy4],
     configIterator: 0,
     cssTopPropertyOfMenuBasedOnRectTopOfBigwordbox: "75px",
@@ -47,7 +45,7 @@ class ConfigMenu extends Component {
     this.props.setAppState({
       triggers,
       showConfigMenu: false,
-      z: { y: 0, n: 0, u: 0 },
+      zIndex: { yes: 0, no: 0, undo: 0 },
     });
 
     setTimeout(this.props.keepListening, 100);
@@ -59,9 +57,9 @@ class ConfigMenu extends Component {
     let newStateForApp = {
       showConfigMenu: false,
       triggers,
-      z: { y: 0, n: 0, u: 0 },
+      zIndex: { yes: 0, no: 0, undo: 0 },
     };
-    newStateForApp.triggers.current = { y: {}, n: {}, u: {} };
+    newStateForApp.triggers.current = { yes: {}, no: {}, undo: {} };
 
     Object.keys(triggers.backup).forEach((triggerName) =>
       Object.keys(triggers.backup[triggerName]).forEach((codeType) => {
@@ -77,12 +75,11 @@ class ConfigMenu extends Component {
   configureKeys = (event, check) => {
     event.preventDefault();
     let i = this.state.configIterator;
-    let which = event.which;
-    let code = event.keyCode;
+    let code = event.key;
     if (i === 0) {
       let newState = {};
       newState.triggers = this.props.triggers;
-      newState.triggers.current = { y: {}, n: {}, u: {} };
+      newState.triggers.current = { yes: {}, no: {}, undo: {} };
       this.props.setAppState(newState);
     }
     if (i >= 4) {
@@ -90,25 +87,25 @@ class ConfigMenu extends Component {
     } else if (
       Object.keys(this.props.triggers.current).every((key) =>
         Object.values(this.props.triggers.current[key]).every(
-          (val) => val !== which && val !== code
+          (val) => val !== code
         )
       )
     ) {
       let newState = {
         triggers: this.props.triggers,
-        z: this.props.z,
+        zIndex: this.props.zIndex,
       };
 
       if (i === 0) {
-        newState.z.y = 2;
+        newState.zIndex.yes = 2;
       } else if (i === 1) {
-        newState.z.n = 2;
-        newState.triggers.current.y = { which, code };
+        newState.zIndex.no = 2;
+        newState.triggers.current.yes = { code };
       } else if (i === 2) {
-        newState.z.u = 2;
-        newState.triggers.current.n = { which, code };
+        newState.zIndex.undo = 2;
+        newState.triggers.current.no = { code };
       } else if (i === 3) {
-        newState.triggers.current.u = { which, code };
+        newState.triggers.current.undo = { code };
       }
       this.setState({ configIterator: i + 1 });
       this.props.setAppState({ newState });
@@ -128,11 +125,7 @@ class ConfigMenu extends Component {
           <div className={styles.configOptionsHolder}>
             <img
               className={styles.clippy}
-              src={
-                this.state.forceBrokenClippy
-                  ? brokenclippy
-                  : this.state.clippy[this.props.configLang]
-              }
+              src={this.state.clippy[this.props.configLang]}
               alt="paperclip cartoon"
             />
             <div className={styles.configTextHolder}>

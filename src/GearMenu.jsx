@@ -29,11 +29,11 @@ const GearMenu = (props) => {
         <button
           onClick={(e) => {
             e.preventDefault();
-            props.setAppState({ userIsOnMobile: !props.userIsOnMobile });
+            props.setAppState({ isTouchscreen: !props.isTouchscreen });
           }}
           className={styles.uploadButton}
         >
-          {props.userIsOnMobile
+          {props.isTouchscreen
             ? "Switch to desktop mode"
             : "Switch to touchscreen mode"}
         </button>

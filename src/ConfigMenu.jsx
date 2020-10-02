@@ -161,24 +161,22 @@ class ConfigMenu extends Component {
               )}
             </div>
           </div>
-          {this.state.configIterator !== 4 && (
-            <button
-              id="Quit Menu"
-              onClick={(e) => {
-                e.preventDefault();
-                this.quitConfig();
-              }}
-              className={styles.configX}
+          <button
+            id="Quit Menu"
+            onClick={(e) => {
+              e.preventDefault();
+              this.quitConfig();
+            }}
+            className={styles.configX}
+          >
+            <span
+              role="img"
+              aria-label="Red X"
+              className={menuStyles.exitSymbol}
             >
-              <span
-                role="img"
-                aria-label="Red X"
-                className={menuStyles.exitSymbol}
-              >
-                &times;
-              </span>
-            </button>
-          )}
+              &times;
+            </span>
+          </button>
         </div>
       </div>
     );

@@ -1,68 +1,49 @@
+# SortCut
+
+## Instructions
+
+This application is live on [Netlify](https://sortcut.netlify.app/), but you can also download this repository and run the project locally by following these steps:
+
+1. Clone this repository with `git clone https://github.com/chicorycolumn/SortCut.git`
+   <br/>
+   If you are unsure what this means, instructions can be found [here](https://www.wikihow.com/Clone-a-Repository-on-Github) or [here](https://www.howtogeek.com/451360/how-to-clone-a-github-repository/).
+
+2. Open the project in a code editor, and run `npm install` to install necessary packages.
+
+3. Run `npm start` to open the project in development mode.
+   <br/>
+   Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Deploy
 
-In the project directory, you can run:
+In general, to set up Netlify so that it deploys automatically when the Github repository is updated, follow these steps:
 
-### `npm start`
+0. Ensure the project is initialised in a Git repository. If you are unsure what this means, instructions can be found [here](https://medium.com/@JinnaBalu/initialize-local-git-repository-push-to-the-remote-repository-787f83ff999) and [here](https://www.theserverside.com/video/How-to-create-a-local-repository-with-the-git-init-command).
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Login to Netlify and click _New Site from Git_, then select _Github_ and then the project in question. Set the command as `npm run build`.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+2. Now when you commit and push to Github, Netlify will deploy the latest version of the project automatically.
 
-### `npm test`
+## Description
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+A clean and simple single-page-application which allows the user to rapidly sort a list of items into "yes" and "no" groups. The design aims to be clear and unfussy, while packing in as much utility as possible.
 
-### `npm run build`
+- The user can upload a list either by pasting it directly, or by uploading a text file. The choice of which character to separate the items in the list by is customisable.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- The user can sort their list both by clicking buttons, and by pressing keyboard shortcuts, which are customisable. The user can move already-sorted items between the lists at any time.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- The user can both download and clipboard-copy the contents of either list at any time.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- The user can undo their actions, all the way back to the beginning if they wish, and the list can be restarted or randomised. The current word is defined in a new tab when clicked on.
 
-### `npm run eject`
+## Challenges
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+My main aim was to create something that I would get as much use as possible from. I personally sorted several thousand words using SortCut, as preparation for another project, so I had a lot of time to test and discover as-yet-unadded functionality that would make it just that little bit more powerful to use, such as customisable keyboard shortcuts, and copying to clipboard.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The main challenge this raised was that many features were to be implemented after the initial planning phase and once most of the project was already underway, which meant several focused periods of reworking the data flow and overhauling the project structure so that the right data and functions would be available where needed.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## What I learned
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+The importance of data management, and useful planning techniques to take forward. It was fun to further explore React and to learn more about useful interfaces such as KeyboardEvent, which I used to allow the user to set their own keyboard shortcuts, as well as working with Blobs to allow the user to upload and download lists.

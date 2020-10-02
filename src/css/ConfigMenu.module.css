@@ -14,6 +14,8 @@
 }
 
 .configOptionsHolder {
+  /* border: green solid 0.5px; */
+  position: relative;
   height: 95%;
   width: 100%;
   z-index: 2;
@@ -23,32 +25,35 @@
 }
 
 .configTextHolder {
-  margin: 2.5% 0% 2.5% 2.5%;
-  font-size: 15.5pt;
+  /* border: black solid 0.5px; */
+  font-size: 13.5pt;
   align-self: center;
-  width: 90%;
-  position: relative;
+  width: 85%;
   line-height: 30px;
   text-align: center;
   height: 95%;
-  top: 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.configText {
-  margin: 0;
+  position: absolute;
+  right: 0px;
+  box-sizing: border-box;
+  padding: 0px 10px;
 }
 
 .clippy {
+  /* border: red solid 1px; */
   display: block;
   max-width: 12.5%;
   font-size: 14px;
   height: 80%;
-  margin: 5%;
-  margin-left: 7%;
-  margin-right: 2%;
+  position: absolute;
+  top: 10%;
+  left: 5%;
+}
+
+.configText {
+  margin: 0;
 }
 
 .configOK {
@@ -65,7 +70,7 @@
 }
 
 .OKnomargin {
-  margin-top: 2.5px;
+  margin-top: 10px;
 }
 
 .configX {

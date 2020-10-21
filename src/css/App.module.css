@@ -135,11 +135,15 @@
   height: 100%;
   flex-direction: column;
   justify-content: center;
+
   word-wrap: break-word;
   overflow-wrap: break-word;
+
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
+  -ms-hyphens: auto;
   hyphens: auto;
+
   overflow: auto;
   padding-bottom: 5px;
   padding-top: 5px;
@@ -151,9 +155,12 @@
   margin-top: -29px;
   word-wrap: break-word;
   overflow-wrap: break-word;
+
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
+  -ms-hyphens: auto;
   hyphens: auto;
+
   overflow: auto;
 }
 
@@ -189,9 +196,12 @@
   overflow-y: auto;
   word-wrap: break-word;
   overflow-wrap: break-word;
+
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
+  -ms-hyphens: auto;
   hyphens: auto;
+
   overflow: auto;
 }
 
@@ -436,13 +446,6 @@
 .fancyButton {
   border: 1.5px solid var(--trunk-darker);
   background-color: var(--eggshell);
-  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--trunk),
-    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
-
-  -moz-box-shadow: 0px var(--trunk-height) 0px var(--trunk),
-    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
   box-shadow: 0px var(--trunk-height) 0px var(--trunk),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
@@ -452,21 +455,15 @@
 .fancyButton:active,
 .fancyButton_active {
   background-color: var(--eggshell-depressed);
-  -webkit-box-shadow: 0px 2px 0px var(--trunk), 0px 1px 6px rgba(0, 0, 0, 0.4),
-    inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
-  -moz-box-shadow: 0px 2px 0px var(--trunk), 0px 1px 6px rgba(0, 0, 0, 0.4),
-    inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
+
   box-shadow: 0px var(--trunk-height-depressed) 0px var(--trunk),
     0px 1px 6px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
     inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
   -webkit-transform: translate(0, var(--trunk-height-minus-depressed));
-  -moz-transform: translate(0, var(--trunk-height-minus-depressed));
+  -ms-transform: translate(0, var(--trunk-height-minus-depressed));
   transform: translate(0, var(--trunk-height-minus-depressed));
-  -webkit-transition: all 0.025s ease-in-out;
-  -moz-transition: all 0.05s ease-in-out;
+
   transition: all 0.05s ease-in-out;
 }
 
@@ -488,17 +485,9 @@
 
 .yesButton {
   z-index: 2;
-  /* box-shadow: 0px 2px 3px var(--yesList-shadow); */
   border: var(--yesList-darker) solid 1pt;
   border-top: var(--yesList-darker) solid 2pt;
   background-color: var(--y-hover);
-  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--yesList-shadow),
-    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
-
-  -moz-box-shadow: 0px var(--trunk-height) 0px var(--yesList-shadow),
-    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
   box-shadow: 0px var(--trunk-height) 0px var(--yesList-shadow),
     0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
@@ -512,18 +501,9 @@
 
 .noButton {
   z-index: 2;
-  /* box-shadow: 0px 2px 3px var(--noList-shadow); */
   border: var(--noList-darker) solid 1pt;
   border-top: var(--noList-darker) solid 2pt;
   background-color: var(--n-hover);
-
-  -webkit-box-shadow: 0px var(--trunk-height) 0px var(--noList-shadow),
-    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
-
-  -moz-box-shadow: 0px var(--trunk-height) 0px var(--noList-shadow),
-    0px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-    inset 0px 0px 3px rgba(255, 255, 255, 0.5);
 
   box-shadow: 0px var(--trunk-height) 0px var(--noList-shadow),
     2px 3px 10px rgba(0, 0, 0, 0.4), inset 0px 1px 0px rgba(255, 255, 255, 0.3),
@@ -606,16 +586,6 @@
   }
 
   .fancyButton {
-    -webkit-box-shadow: 0px var(--trunk-height) 0px var(--trunk),
-      0px 3px 2.5px rgba(0, 0, 0, 0.4),
-      inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-      inset 0px 0px 3px rgba(255, 255, 255, 0.5);
-
-    -moz-box-shadow: 0px var(--trunk-height) 0px var(--trunk),
-      0px 3px 2.5px rgba(0, 0, 0, 0.4),
-      inset 0px 1px 0px rgba(255, 255, 255, 0.3),
-      inset 0px 0px 3px rgba(255, 255, 255, 0.5);
-
     box-shadow: 0px var(--trunk-height) 0px var(--trunk),
       0px 3px 2.5px rgba(0, 0, 0, 0.4),
       inset 0px 1px 0px rgba(255, 255, 255, 0.3),

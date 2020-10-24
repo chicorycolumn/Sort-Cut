@@ -14,7 +14,6 @@
 }
 
 .configOptionsHolder {
-  /* border: green solid 0.5px; */
   position: relative;
   height: 95%;
   width: 100%;
@@ -25,7 +24,6 @@
 }
 
 .configTextHolder {
-  /* border: black solid 0.5px; */
   font-size: 13.5pt;
   align-self: center;
   width: 85%;
@@ -42,7 +40,6 @@
 }
 
 .clippy {
-  /* border: red solid 1px; */
   display: block;
   max-width: 12.5%;
   font-size: 14px;
